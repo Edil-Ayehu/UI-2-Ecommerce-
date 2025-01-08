@@ -29,7 +29,7 @@ class ProductDetailsScreen extends StatelessWidget {
           Stack(
             children: [
               Image.asset(
-                'assets/product_image.png',
+                'assets/images/shoe.jpg',
                 width: double.infinity,
                 height: 400,
                 fit: BoxFit.cover,

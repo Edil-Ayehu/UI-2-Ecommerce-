@@ -12,6 +12,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width to calculate responsive dimensions
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -22,6 +25,10 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: Container(
+        // Remove fixed width constraints
+        constraints: BoxConstraints(
+          maxWidth: screenWidth * 0.9, // 90% of screen width
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -39,15 +46,18 @@ class ProductCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
-                  child: Image.asset(
-                    product.imageUrl,
-                    height: 180,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                AspectRatio(
+                  aspectRatio:
+                      16 / 9, // Use aspect ratio instead of fixed height
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                    child: Image.asset(
+                      product.imageUrl,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -93,28 +103,28 @@ class ProductCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(screenWidth * 0.02), // Responsive padding
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.04, // Responsive font size
                       fontWeight: FontWeight.bold,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: screenWidth * 0.01),
                   Text(
                     product.category,
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: screenWidth * 0.03, // Responsive font size
                       color: Colors.grey[600],
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: screenWidth * 0.01),
                   Row(
                     children: [
                       Text(
@@ -125,11 +135,12 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       if (product.oldPrice != null) ...[
-                        const SizedBox(width: 8),
+                        SizedBox(width: screenWidth * 0.01),
                         Text(
                           '\$${product.oldPrice!.toStringAsFixed(2)}',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize:
+                                screenWidth * 0.03, // Responsive font size
                             color: Colors.grey[600],
                             decoration: TextDecoration.lineThrough,
                           ),
