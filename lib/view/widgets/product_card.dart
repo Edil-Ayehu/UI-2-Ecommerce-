@@ -14,6 +14,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () {
@@ -29,11 +30,13 @@ class ProductCard extends StatelessWidget {
           maxWidth: screenWidth * 0.9,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: isDark
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 5,
               offset: const Offset(0, 2),
@@ -68,7 +71,9 @@ class ProductCard extends StatelessWidget {
                           : Icons.favorite_border,
                       color: product.isFavorite
                           ? Theme.of(context).primaryColor
-                          : Colors.grey,
+                          : isDark
+                              ? Colors.grey[400]
+                              : Colors.grey,
                     ),
                     onPressed: () {
                       // Implement favorite toggle functionality
@@ -109,9 +114,12 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Text(
                     product.name,
-                    style: AppTextStyle.withWeight(
-                      AppTextStyle.h3,
-                      FontWeight.bold,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.withWeight(
+                        AppTextStyle.h3,
+                        FontWeight.bold,
+                      ),
+                      Theme.of(context).textTheme.bodyLarge!.color!,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -121,7 +129,7 @@ class ProductCard extends StatelessWidget {
                     product.category,
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodyMedium,
-                      Colors.grey[600]!,
+                      isDark ? Colors.grey[400]! : Colors.grey[600]!,
                     ),
                   ),
                   SizedBox(height: screenWidth * 0.01),
@@ -129,9 +137,12 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
-                        style: AppTextStyle.withWeight(
-                          AppTextStyle.bodyLarge,
-                          FontWeight.bold,
+                        style: AppTextStyle.withColor(
+                          AppTextStyle.withWeight(
+                            AppTextStyle.bodyLarge,
+                            FontWeight.bold,
+                          ),
+                          Theme.of(context).textTheme.bodyLarge!.color!,
                         ),
                       ),
                       if (product.oldPrice != null) ...[
@@ -140,7 +151,7 @@ class ProductCard extends StatelessWidget {
                           '\$${product.oldPrice!.toStringAsFixed(2)}',
                           style: AppTextStyle.withColor(
                             AppTextStyle.bodySmall,
-                            Colors.grey[600]!,
+                            isDark ? Colors.grey[400]! : Colors.grey[600]!,
                           ).copyWith(
                             decoration: TextDecoration.lineThrough,
                           ),

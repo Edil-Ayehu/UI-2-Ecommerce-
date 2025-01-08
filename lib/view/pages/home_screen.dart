@@ -54,16 +54,16 @@ class HomeScreen extends StatelessWidget {
                     onPressed: () {},
                   ),
                   // In the AppBar actions, add this before the shopping bag icon:
-GetBuilder<ThemeController>(
-  builder: (controller) => IconButton(
-    icon: Icon(
-      controller.isDarkMode 
-        ? Icons.light_mode 
-        : Icons.dark_mode,
-    ),
-    onPressed: () => controller.toggleTheme(),
-  ),
-),
+                  GetBuilder<ThemeController>(
+                    builder: (controller) => IconButton(
+                      icon: Icon(
+                        controller.isDarkMode
+                            ? Icons.light_mode
+                            : Icons.dark_mode,
+                      ),
+                      onPressed: () => controller.toggleTheme(),
+                    ),
+                  ),
                 ],
               ),
             ),

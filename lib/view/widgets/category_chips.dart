@@ -14,6 +14,8 @@ class _CategoryChipsState extends State<CategoryChips> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -35,7 +37,11 @@ class _CategoryChipsState extends State<CategoryChips> {
                             FontWeight.w600,
                           )
                         : AppTextStyle.bodySmall,
-                    selectedIndex == index ? Colors.white : Colors.grey[600]!,
+                    selectedIndex == index
+                        ? Colors.white
+                        : isDark
+                            ? Colors.grey[300]!
+                            : Colors.grey[600]!,
                   ),
                 ),
                 selected: selectedIndex == index,
@@ -45,7 +51,9 @@ class _CategoryChipsState extends State<CategoryChips> {
                   });
                 },
                 selectedColor: Theme.of(context).primaryColor,
-                backgroundColor: Colors.grey[100],
+                backgroundColor: isDark
+                    ? Colors.grey[800] // Darker background for dark mode
+                    : Colors.grey[100], // Light background for light mode
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -63,7 +71,9 @@ class _CategoryChipsState extends State<CategoryChips> {
                 side: BorderSide(
                   color: selectedIndex == index
                       ? Colors.transparent
-                      : Colors.grey[300]!,
+                      : isDark
+                          ? Colors.grey[700]! // Darker border for dark mode
+                          : Colors.grey[300]!, // Light border for light mode
                   width: 1,
                 ),
               ),

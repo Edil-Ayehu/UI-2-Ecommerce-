@@ -37,24 +37,33 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions
     final screenSize = MediaQuery.of(context).size;
     final screenHeight = screenSize.height;
     final screenWidth = screenSize.width;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Details',
-          style: AppTextStyle.withColor(AppTextStyle.h3, Colors.black),
+          style: AppTextStyle.withColor(
+            AppTextStyle.h3,
+            isDark ? Colors.white : Colors.black,
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share, color: Colors.black),
+            icon: Icon(
+              Icons.share,
+              color: isDark ? Colors.white : Colors.black,
+            ),
             onPressed: () => _shareProduct(context),
           ),
         ],
@@ -77,7 +86,10 @@ class ProductDetailsScreen extends StatelessWidget {
                   right: screenWidth * 0.04,
                   top: screenWidth * 0.04,
                   child: IconButton(
-                    icon: const Icon(Icons.favorite_border),
+                    icon: Icon(
+                      Icons.favorite_border,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                     onPressed: () {},
                   ),
                 ),
@@ -94,12 +106,18 @@ class ProductDetailsScreen extends StatelessWidget {
                       Expanded(
                         child: Text(
                           'Cotton T-Shirt',
-                          style: AppTextStyle.h2,
+                          style: AppTextStyle.withColor(
+                            AppTextStyle.h2,
+                            Theme.of(context).textTheme.headlineMedium!.color!,
+                          ),
                         ),
                       ),
                       Text(
                         '\$86.00',
-                        style: AppTextStyle.h2,
+                        style: AppTextStyle.withColor(
+                          AppTextStyle.h2,
+                          Theme.of(context).textTheme.headlineMedium!.color!,
+                        ),
                       ),
                     ],
                   ),
@@ -107,27 +125,33 @@ class ProductDetailsScreen extends StatelessWidget {
                     'Outerwear Men',
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodyMedium,
-                      Colors.grey,
+                      isDark ? Colors.grey[400]! : Colors.grey[600]!,
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   Text(
                     'Select Size',
-                    style: AppTextStyle.labelMedium,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.labelMedium,
+                      Theme.of(context).textTheme.bodyLarge!.color!,
+                    ),
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   const SizeSelector(),
                   SizedBox(height: screenHeight * 0.02),
                   Text(
                     'Description',
-                    style: AppTextStyle.labelMedium,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.labelMedium,
+                      Theme.of(context).textTheme.bodyLarge!.color!,
+                    ),
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     'A cotton T-shirt is a must-have for its softness, breathability, and effortless style. Ideal for any season, it keeps you cool in warm weather and adds a light layer when needed. With a range of colors...',
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodySmall,
-                      Colors.grey,
+                      isDark ? Colors.grey[400]! : Colors.grey[600]!,
                     ),
                   ),
                 ],
@@ -148,10 +172,16 @@ class ProductDetailsScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       vertical: screenHeight * 0.02,
                     ),
+                    side: BorderSide(
+                      color: isDark ? Colors.white70 : Colors.black12,
+                    ),
                   ),
                   child: Text(
                     'Add To Cart',
-                    style: AppTextStyle.buttonMedium,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.buttonMedium,
+                      Theme.of(context).textTheme.bodyLarge!.color!,
+                    ),
                   ),
                 ),
               ),
