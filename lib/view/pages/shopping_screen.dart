@@ -66,7 +66,6 @@ class ShoppingScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
     );
   }
 
