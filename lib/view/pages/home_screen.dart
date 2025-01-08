@@ -1,7 +1,9 @@
+import 'package:ecommerce_ui/controllers/theme_controller.dart';
 import 'package:ecommerce_ui/view/widgets/custom_bottom_navbar.dart';
 import 'package:ecommerce_ui/view/widgets/custom_search_bar.dart';
 import 'package:ecommerce_ui/view/widgets/product_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../widgets/category_chips.dart';
 import '../widgets/sale_banner.dart';
 
@@ -51,6 +53,17 @@ class HomeScreen extends StatelessWidget {
                     icon: const Icon(Icons.shopping_bag_outlined),
                     onPressed: () {},
                   ),
+                  // In the AppBar actions, add this before the shopping bag icon:
+GetBuilder<ThemeController>(
+  builder: (controller) => IconButton(
+    icon: Icon(
+      controller.isDarkMode 
+        ? Icons.light_mode 
+        : Icons.dark_mode,
+    ),
+    onPressed: () => controller.toggleTheme(),
+  ),
+),
                 ],
               ),
             ),

@@ -1,7 +1,13 @@
+import 'package:ecommerce_ui/controllers/theme_controller.dart';
+import 'package:ecommerce_ui/utils/app_themes.dart';
 import 'package:ecommerce_ui/view/pages/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
+  Get.put(ThemeController());
   runApp(const MyApp());
 }
 
@@ -10,21 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final themeController = Get.find<ThemeController>();
+    
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Fashion Store',
-      theme: ThemeData(
-        primaryColor: const Color(0xFFFF5722),
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFFF5722),
-          primary: const Color(0xFFFF5722),
-        ),
-      ),
+      theme: AppThemes.light,
+      darkTheme: AppThemes.dark,
+      themeMode: themeController.theme,
       home: const HomeScreen(),
     );
   }
