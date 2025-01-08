@@ -1,3 +1,4 @@
+import 'package:ecommerce_ui/view/pages/account_screen.dart';
 import 'package:ecommerce_ui/view/pages/wishlist_screen.dart';
 import 'package:ecommerce_ui/view/widgets/custom_bottom_navbar.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class MainScreen extends StatelessWidget {
             HomeScreen(),
             ShoppingScreen(),
             WishlistScreen(),
-            Scaffold(body: Center(child: Text('Account'))),
+            AccountScreen(),
           ],
         ),
       ),
