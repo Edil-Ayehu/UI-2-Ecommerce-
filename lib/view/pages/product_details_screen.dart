@@ -1,8 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../widgets/size_selector.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key});
+
+  Future<void> _shareProduct(BuildContext context) async {
+    // Get the render box for share position origin (required for iPad)
+    final box = context.findRenderObject() as RenderBox?;
+    
+    // Customize this message according to your product details
+    const String productName = 'Cotton T-Shirt';
+    const double price = 86.00;
+    const String description = 'Check out this amazing Cotton T-Shirt for \$86.00!';
+    const String shopLink = 'https://yourshop.com/product/cotton-tshirt'; // Replace with your actual product link
+    
+    final String shareMessage = '$description\n\nShop now at: $shopLink';
+
+    try {
+      final ShareResult result = await Share.share(
+        shareMessage,
+        subject: productName,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+
+      if (result.status == ShareResultStatus.success) {
+        debugPrint('Thank you for sharing!');
+      }
+    } catch (e) {
+      debugPrint('Error sharing: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +52,7 @@ class ProductDetailsScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
-            onPressed: () {},
+            onPressed: () => _shareProduct(context),
           ),
         ],
       ),
