@@ -103,7 +103,7 @@ class ShoppingScreen extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const ProductDetailsScreen(),
+          builder: (context) => ProductDetailsScreen(product: product),
         ),
       ),
       child: Container(

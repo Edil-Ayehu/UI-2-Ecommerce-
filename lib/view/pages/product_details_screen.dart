@@ -1,10 +1,12 @@
+import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/size_selector.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final Product product;
+  const ProductDetailsScreen({super.key, required this.product});
 
   Future<void> _shareProduct(BuildContext context) async {
     // Get the render box for share position origin (required for iPad)
@@ -77,7 +79,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: Image.asset(
-                    'assets/images/shoe.jpg',
+                    product.imageUrl,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -87,8 +89,8 @@ class ProductDetailsScreen extends StatelessWidget {
                   top: screenWidth * 0.04,
                   child: IconButton(
                     icon: Icon(
-                      Icons.favorite_border,
-                      color: isDark ? Colors.white : Colors.black,
+                      product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: product.isFavorite ? Theme.of(context).primaryColor : (isDark ? Colors.white : Colors.black),
                     ),
                     onPressed: () {},
                   ),
@@ -105,7 +107,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Cotton T-Shirt',
+                          product.name,
                           style: AppTextStyle.withColor(
                             AppTextStyle.h2,
                             Theme.of(context).textTheme.headlineMedium!.color!,
@@ -113,7 +115,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '\$86.00',
+                        '\$${product.price.toStringAsFixed(2)}',
                         style: AppTextStyle.withColor(
                           AppTextStyle.h2,
                           Theme.of(context).textTheme.headlineMedium!.color!,
@@ -122,7 +124,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    'Outerwear Men',
+                    product.category,
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodyMedium,
                       isDark ? Colors.grey[400]! : Colors.grey[600]!,
