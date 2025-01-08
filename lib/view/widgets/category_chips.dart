@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class CategoryChips extends StatefulWidget {
   const CategoryChips({super.key});
@@ -27,14 +28,14 @@ class _CategoryChipsState extends State<CategoryChips> {
               child: ChoiceChip(
                 label: Text(
                   categories[index],
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: selectedIndex == index
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                    color: selectedIndex == index
-                        ? Colors.white
-                        : Colors.grey[600],
+                  style: AppTextStyle.withColor(
+                    selectedIndex == index
+                        ? AppTextStyle.withWeight(
+                            AppTextStyle.bodySmall,
+                            FontWeight.w600,
+                          )
+                        : AppTextStyle.bodySmall,
+                    selectedIndex == index ? Colors.white : Colors.grey[600]!,
                   ),
                 ),
                 selected: selectedIndex == index,

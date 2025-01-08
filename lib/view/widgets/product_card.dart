@@ -1,4 +1,5 @@
 import 'package:ecommerce_ui/model/product.dart';
+import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/view/pages/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,6 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width to calculate responsive dimensions
     final screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
@@ -25,9 +25,8 @@ class ProductCard extends StatelessWidget {
         );
       },
       child: Container(
-        // Remove fixed width constraints
         constraints: BoxConstraints(
-          maxWidth: screenWidth * 0.9, // 90% of screen width
+          maxWidth: screenWidth * 0.9,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -47,8 +46,7 @@ class ProductCard extends StatelessWidget {
             Stack(
               children: [
                 AspectRatio(
-                  aspectRatio:
-                      16 / 9, // Use aspect ratio instead of fixed height
+                  aspectRatio: 16 / 9,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(12),
@@ -92,10 +90,12 @@ class ProductCard extends StatelessWidget {
                       ),
                       child: Text(
                         '${calculateDiscount(product.price, product.oldPrice!)}% OFF',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyle.withColor(
+                          AppTextStyle.withWeight(
+                            AppTextStyle.bodySmall,
+                            FontWeight.bold,
+                          ),
+                          Colors.white,
                         ),
                       ),
                     ),
@@ -103,15 +103,15 @@ class ProductCard extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: EdgeInsets.all(screenWidth * 0.02), // Responsive padding
+              padding: EdgeInsets.all(screenWidth * 0.02),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04, // Responsive font size
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyle.withWeight(
+                      AppTextStyle.h3,
+                      FontWeight.bold,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -119,9 +119,9 @@ class ProductCard extends StatelessWidget {
                   SizedBox(height: screenWidth * 0.01),
                   Text(
                     product.category,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.03, // Responsive font size
-                      color: Colors.grey[600],
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.bodyMedium,
+                      Colors.grey[600]!,
                     ),
                   ),
                   SizedBox(height: screenWidth * 0.01),
@@ -129,19 +129,19 @@ class ProductCard extends StatelessWidget {
                     children: [
                       Text(
                         '\$${product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        style: AppTextStyle.withWeight(
+                          AppTextStyle.bodyLarge,
+                          FontWeight.bold,
                         ),
                       ),
                       if (product.oldPrice != null) ...[
                         SizedBox(width: screenWidth * 0.01),
                         Text(
                           '\$${product.oldPrice!.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize:
-                                screenWidth * 0.03, // Responsive font size
-                            color: Colors.grey[600],
+                          style: AppTextStyle.withColor(
+                            AppTextStyle.bodySmall,
+                            Colors.grey[600]!,
+                          ).copyWith(
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),

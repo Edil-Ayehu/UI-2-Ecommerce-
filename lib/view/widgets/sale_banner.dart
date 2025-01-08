@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class SaleBanner extends StatelessWidget {
   const SaleBanner({super.key});
@@ -17,27 +18,29 @@ class SaleBanner extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
                   'Get Your',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                  style: AppTextStyle.withColor(
+                    AppTextStyle.h3,
+                    Colors.white,
                   ),
                 ),
                 Text(
                   'Special Sale',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyle.withColor(
+                    AppTextStyle.withWeight(
+                      AppTextStyle.h2,
+                      FontWeight.bold,
+                    ),
+                    Colors.white,
                   ),
                 ),
                 Text(
                   'Up to 40%',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+                  style: AppTextStyle.withColor(
+                    AppTextStyle.h3,
+                    Colors.white,
                   ),
                 ),
               ],
@@ -48,8 +51,15 @@ class SaleBanner extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
             ),
-            child: const Text('Shop Now'),
+            child: Text(
+              'Shop Now',
+              style: AppTextStyle.buttonMedium,
+            ),
           ),
         ],
       ),

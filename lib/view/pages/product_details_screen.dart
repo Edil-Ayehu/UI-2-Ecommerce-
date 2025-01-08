@@ -1,3 +1,4 @@
+import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../widgets/size_selector.dart';
@@ -8,13 +9,15 @@ class ProductDetailsScreen extends StatelessWidget {
   Future<void> _shareProduct(BuildContext context) async {
     // Get the render box for share position origin (required for iPad)
     final box = context.findRenderObject() as RenderBox?;
-    
+
     // Customize this message according to your product details
     const String productName = 'Cotton T-Shirt';
     const double price = 86.00;
-    const String description = 'Check out this amazing Cotton T-Shirt for \$86.00!';
-    const String shopLink = 'https://yourshop.com/product/cotton-tshirt'; // Replace with your actual product link
-    
+    const String description =
+        'Check out this amazing Cotton T-Shirt for \$86.00!';
+    const String shopLink =
+        'https://yourshop.com/product/cotton-tshirt'; // Replace with your actual product link
+
     final String shareMessage = '$description\n\nShop now at: $shopLink';
 
     try {
@@ -45,9 +48,9 @@ class ProductDetailsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Details',
-          style: TextStyle(color: Colors.black),
+          style: AppTextStyle.withColor(AppTextStyle.h3, Colors.black),
         ),
         actions: [
           IconButton(
@@ -88,53 +91,43 @@ class ProductDetailsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Cotton T-Shirt',
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.06,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          'Cotton T-Shirt',
+                          style: AppTextStyle.h2,
                         ),
                       ),
                       Text(
                         '\$86.00',
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.06,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyle.h2,
                       ),
                     ],
                   ),
                   Text(
                     'Outerwear Men',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: screenWidth * 0.035,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.bodyMedium,
+                      Colors.grey,
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   Text(
                     'Select Size',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyle.labelMedium,
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   const SizeSelector(),
                   SizedBox(height: screenHeight * 0.02),
                   Text(
                     'Description',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.04,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyle.labelMedium,
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
                     'A cotton T-shirt is a must-have for its softness, breathability, and effortless style. Ideal for any season, it keeps you cool in warm weather and adds a light layer when needed. With a range of colors...',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: screenWidth * 0.035,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.bodySmall,
+                      Colors.grey,
                     ),
                   ),
                 ],
@@ -158,7 +151,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Add To Cart',
-                    style: TextStyle(fontSize: screenWidth * 0.035),
+                    style: AppTextStyle.buttonMedium,
                   ),
                 ),
               ),
@@ -174,9 +167,9 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'Buy Now',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.035,
-                      color: Colors.white,
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.buttonMedium,
+                      Colors.white,
                     ),
                   ),
                 ),
