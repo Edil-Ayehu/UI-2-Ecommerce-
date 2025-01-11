@@ -1,5 +1,6 @@
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -143,10 +144,66 @@ class AccountScreen extends StatelessWidget {
                 Icons.chevron_right,
                 color: isDark ? Colors.grey[400] : Colors.grey[600],
               ),
-              onTap: () {},
+              onTap: () {
+                if (item['title'] == 'Logout') {
+                  _showLogoutDialog(context);
+                }
+              },
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        title: Text(
+          'Logout',
+          style: AppTextStyle.withColor(
+            AppTextStyle.h3,
+            Theme.of(context).textTheme.bodyLarge!.color!,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to logout?',
+          style: AppTextStyle.withColor(
+            AppTextStyle.bodyMedium,
+            isDark ? Colors.grey[400]! : Colors.grey[600]!,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: Text(
+              'Cancel',
+              style: AppTextStyle.withColor(
+                AppTextStyle.buttonMedium,
+                Theme.of(context).textTheme.bodyLarge!.color!,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              // Handle logout
+            },
+            child: Text(
+              'Logout',
+              style: AppTextStyle.withColor(
+                AppTextStyle.buttonMedium,
+                Theme.of(context).textTheme.bodyLarge!.color!,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
