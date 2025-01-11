@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppThemes {
   static final light = ThemeData(
@@ -15,7 +14,7 @@ class AppThemes {
       seedColor: const Color(0xFFFF5722),
       primary: const Color(0xFFFF5722),
       brightness: Brightness.light,
-      background: Colors.white,
+      surface: Colors.white,
     ),
     cardColor: Colors.white,
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -38,7 +37,7 @@ class AppThemes {
       seedColor: const Color(0xFFFF5722),
       primary: const Color(0xFFFF5722),
       brightness: Brightness.dark,
-      background: Color(0xFF121212),
+      surface: const Color(0xFF121212),
     ),
     cardColor: const Color(0xFF1E1E1E),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

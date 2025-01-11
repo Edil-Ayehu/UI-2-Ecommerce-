@@ -54,7 +54,7 @@ class AccountScreen extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 50,
-            backgroundImage: AssetImage('assets/images/favicon.png'),
+            backgroundImage: AssetImage('assets/images/avatar.jpg'),
           ),
           const SizedBox(height: 16),
           Text(

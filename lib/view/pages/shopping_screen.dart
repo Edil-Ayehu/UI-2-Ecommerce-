@@ -1,9 +1,8 @@
 import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/view/pages/product_details_screen.dart';
-import 'package:ecommerce_ui/view/widgets/custom_bottom_navbar.dart';
+import 'package:ecommerce_ui/view/widgets/category_chips.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({super.key});
@@ -23,6 +22,7 @@ class ShoppingScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          // search
           IconButton(
             icon: Icon(
               Icons.search,
@@ -30,6 +30,7 @@ class ShoppingScreen extends StatelessWidget {
             ),
             onPressed: () {},
           ),
+          // filter
           IconButton(
             icon: Icon(
               Icons.filter_list,
@@ -42,8 +43,11 @@ class ShoppingScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           // Categories Section
-          SliverToBoxAdapter(
-            child: _buildCategoriesSection(context),
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: CategoryChips(),
+            ),
           ),
           // Products Grid
           SliverPadding(
@@ -60,38 +64,11 @@ class ShoppingScreen extends StatelessWidget {
                   context,
                   products[index % products.length],
                 ),
-                childCount: products.length * 2, // Duplicate for demo
+                childCount: products.length * 2,
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCategoriesSection(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final categories = ['All', 'Men', 'Women', 'Kids', 'Sport', 'Luxury'];
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-      child: Row(
-        children: categories.map((category) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Chip(
-              label: Text(
-                category,
-                style: AppTextStyle.withColor(
-                  AppTextStyle.bodySmall,
-                  isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-              backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-            ),
-          );
-        }).toList(),
       ),
     );
   }

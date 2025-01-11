@@ -8,35 +8,6 @@ class ProductDetailsScreen extends StatelessWidget {
   final Product product;
   const ProductDetailsScreen({super.key, required this.product});
 
-  Future<void> _shareProduct(BuildContext context) async {
-    // Get the render box for share position origin (required for iPad)
-    final box = context.findRenderObject() as RenderBox?;
-
-    // Customize this message according to your product details
-    const String productName = 'Cotton T-Shirt';
-    const double price = 86.00;
-    const String description =
-        'Check out this amazing Cotton T-Shirt for \$86.00!';
-    const String shopLink =
-        'https://yourshop.com/product/cotton-tshirt'; // Replace with your actual product link
-
-    final String shareMessage = '$description\n\nShop now at: $shopLink';
-
-    try {
-      final ShareResult result = await Share.share(
-        shareMessage,
-        subject: productName,
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
-
-      if (result.status == ShareResultStatus.success) {
-        debugPrint('Thank you for sharing!');
-      }
-    } catch (e) {
-      debugPrint('Error sharing: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -66,7 +37,8 @@ class ProductDetailsScreen extends StatelessWidget {
               Icons.share,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: () => _shareProduct(context),
+            onPressed: () =>
+                _shareProduct(context, product.name, product.description),
           ),
         ],
       ),
@@ -89,8 +61,12 @@ class ProductDetailsScreen extends StatelessWidget {
                   top: screenWidth * 0.04,
                   child: IconButton(
                     icon: Icon(
-                      product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: product.isFavorite ? Theme.of(context).primaryColor : (isDark ? Colors.white : Colors.black),
+                      product.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: product.isFavorite
+                          ? Theme.of(context).primaryColor
+                          : (isDark ? Colors.white : Colors.black),
                     ),
                     onPressed: () {},
                   ),
@@ -150,7 +126,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
-                    'A cotton T-shirt is a must-have for its softness, breathability, and effortless style. Ideal for any season, it keeps you cool in warm weather and adds a light layer when needed. With a range of colors...',
+                    product.description,
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodySmall,
                       isDark ? Colors.grey[400]! : Colors.grey[600]!,
@@ -162,6 +138,7 @@ class ProductDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+      // buttons
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(screenWidth * 0.04),
@@ -211,5 +188,29 @@ class ProductDetailsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _shareProduct(
+      BuildContext context, String productName, String description) async {
+    // Get the render box for share position origin (required for iPad)
+    final box = context.findRenderObject() as RenderBox?;
+
+    const String shopLink = 'https://yourshop.com/product/cotton-tshirt';
+
+    final String shareMessage = '$description\n\nShop now at: $shopLink';
+
+    try {
+      final ShareResult result = await Share.share(
+        shareMessage,
+        subject: productName,
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+
+      if (result.status == ShareResultStatus.success) {
+        debugPrint('Thank you for sharing!');
+      }
+    } catch (e) {
+      debugPrint('Error sharing: $e');
+    }
   }
 }

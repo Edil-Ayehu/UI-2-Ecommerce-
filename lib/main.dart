@@ -1,6 +1,6 @@
 import 'package:ecommerce_ui/controllers/theme_controller.dart';
 import 'package:ecommerce_ui/utils/app_themes.dart';
-import 'package:ecommerce_ui/view/pages/main_screen.dart';
+import 'package:ecommerce_ui/view/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.light,
       darkTheme: AppThemes.dark,
       themeMode: themeController.theme,
-      home: const MainScreen(),
+      home: const SplashScreen(),
     );
   }
 }
