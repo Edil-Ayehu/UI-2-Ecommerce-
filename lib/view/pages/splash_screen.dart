@@ -1,16 +1,26 @@
+import 'package:ecommerce_ui/controllers/auth_controller.dart';
+import 'package:ecommerce_ui/view/pages/auth/signin_screen.dart';
+import 'package:ecommerce_ui/view/pages/onboarding_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/view/pages/main_screen.dart';
 
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+  SplashScreen({super.key});
+  final AuthController authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
     // Navigate to MainScreen after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
-      Get.off(() => const MainScreen());
+      if (authController.isFirstTime) {
+        Get.off(() => const OnboardingScreen());
+      } else if (authController.isLoggedIn) {
+        Get.off(() => const MainScreen());
+      } else {
+        Get.off(() => const SignInScreen());
+      }
     });
 
     return Scaffold(
