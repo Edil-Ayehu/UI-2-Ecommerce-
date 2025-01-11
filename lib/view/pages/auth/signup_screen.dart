@@ -1,10 +1,17 @@
+import 'package:ecommerce_ui/view/pages/auth/widgets/custom_textfield.dart';
+import 'package:ecommerce_ui/view/pages/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/view/pages/auth/signin_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,40 +48,70 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              _buildTextField(
-                context,
-                'Full Name',
-                Icons.person_outline,
-                TextInputType.name,
-              ),
+CustomTextField(
+  label: 'Full Name',
+  prefixIcon: Icons.person_outline,
+  keyboardType: TextInputType.name,
+  controller: _nameController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your name';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 16),
-              _buildTextField(
-                context,
-                'Email',
-                Icons.email_outlined,
-                TextInputType.emailAddress,
-              ),
+CustomTextField(
+  label: 'Email',
+  prefixIcon: Icons.email_outlined,
+  keyboardType: TextInputType.emailAddress,
+  controller: _emailController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!GetUtils.isEmail(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 16),
-              _buildTextField(
-                context,
-                'Password',
-                Icons.lock_outline,
-                TextInputType.visiblePassword,
-                isPassword: true,
-              ),
+CustomTextField(
+  label: 'Password',
+  prefixIcon: Icons.lock_outline,
+  keyboardType: TextInputType.visiblePassword,
+  isPassword: true,
+  controller: _passwordController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 16),
-              _buildTextField(
-                context,
-                'Confirm Password',
-                Icons.lock_outline,
-                TextInputType.visiblePassword,
-                isPassword: true,
-              ),
+CustomTextField(
+  label: 'Confirm Password',
+  prefixIcon: Icons.lock_outline,
+  keyboardType: TextInputType.visiblePassword,
+  isPassword: true,
+  controller: _confirmPasswordController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.off(() => const SignInScreen()),
+                  onPressed: () => Get.off(() => MainScreen()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -103,7 +140,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Get.off(() => const SignInScreen()),
+                    onPressed: () => Get.off(() => SignInScreen()),
                     child: Text(
                       'Sign In',
                       style: AppTextStyle.withColor(

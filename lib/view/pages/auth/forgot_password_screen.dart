@@ -1,9 +1,12 @@
+import 'package:ecommerce_ui/view/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+  ForgotPasswordScreen({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -40,42 +43,21 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                style: AppTextStyle.withColor(
-                  AppTextStyle.bodyMedium,
-                  Theme.of(context).textTheme.bodyLarge!.color!,
-                ),
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  labelStyle: AppTextStyle.withColor(
-                    AppTextStyle.bodyMedium,
-                    isDark ? Colors.grey[400]! : Colors.grey[600]!,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.email_outlined,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-              ),
+CustomTextField(
+  label: 'Email',
+  prefixIcon: Icons.email_outlined,
+  keyboardType: TextInputType.emailAddress,
+  controller: _emailController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!GetUtils.isEmail(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,

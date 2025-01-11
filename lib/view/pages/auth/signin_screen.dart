@@ -1,3 +1,4 @@
+import 'package:ecommerce_ui/view/pages/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
@@ -7,7 +8,10 @@ import 'package:ecommerce_ui/view/pages/main_screen.dart';
 import 'package:ecommerce_ui/controllers/auth_controller.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key});
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,25 +41,40 @@ class SignInScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              _buildTextField(
-                context,
-                'Email',
-                Icons.email_outlined,
-                TextInputType.emailAddress,
-              ),
+CustomTextField(
+  label: 'Email',
+  prefixIcon: Icons.email_outlined,
+  keyboardType: TextInputType.emailAddress,
+  controller: _emailController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!GetUtils.isEmail(value)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 16),
-              _buildTextField(
-                context,
-                'Password',
-                Icons.lock_outline,
-                TextInputType.visiblePassword,
-                isPassword: true,
-              ),
+CustomTextField(
+  label: 'Password',
+  prefixIcon: Icons.lock_outline,
+  keyboardType: TextInputType.visiblePassword,
+  isPassword: true,
+  controller: _passwordController,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    return null;
+  },
+),
               const SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () => Get.to(() => const ForgotPasswordScreen()),
+                  onPressed: () => Get.to(() => ForgotPasswordScreen()),
                   child: Text(
                     'Forgot Password?',
                     style: AppTextStyle.withColor(
@@ -98,7 +117,7 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => Get.to(() => const SignUpScreen()),
+                    onPressed: () => Get.to(() => SignUpScreen()),
                     child: Text(
                       'Sign Up',
                       style: AppTextStyle.withColor(
