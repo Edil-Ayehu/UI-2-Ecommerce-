@@ -1,4 +1,5 @@
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
+import 'package:ecommerce_ui/view/pages/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +26,7 @@ class AccountScreen extends StatelessWidget {
               Icons.settings_outlined,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () => Get.to(() => const SettingsScreen()),
           ),
         ],
       ),
