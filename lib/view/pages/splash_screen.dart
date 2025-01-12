@@ -1,5 +1,5 @@
 import 'package:ecommerce_ui/controllers/auth_controller.dart';
-import 'package:ecommerce_ui/view/pages/auth/signin_screen.dart';
+import 'package:ecommerce_ui/view/auth/signin_screen.dart';
 import 'package:ecommerce_ui/view/pages/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
-import 'package:ecommerce_ui/view/pages/auth/signin_screen.dart';
+import 'package:ecommerce_ui/view/auth/signin_screen.dart';
 import 'package:ecommerce_ui/controllers/auth_controller.dart';
 
 class OnboardingScreen extends StatefulWidget {

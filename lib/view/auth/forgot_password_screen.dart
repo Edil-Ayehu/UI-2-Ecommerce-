@@ -1,4 +1,4 @@
-import 'package:ecommerce_ui/view/pages/auth/widgets/custom_textfield.dart';
+import 'package:ecommerce_ui/view/auth/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
