@@ -1,7 +1,7 @@
 import 'package:ecommerce_ui/controllers/auth_controller.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
+import 'package:ecommerce_ui/view/my%20orders/my_orders_screen.dart';
 import 'package:ecommerce_ui/view/pages/auth/signin_screen.dart';
-import 'package:ecommerce_ui/view/pages/my_orders_screen.dart';
 import 'package:ecommerce_ui/view/pages/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

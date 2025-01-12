@@ -1,64 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
+import 'package:get/get.dart';
 
-class MyOrdersScreen extends StatelessWidget {
-  const MyOrdersScreen({super.key});
+class OrderCard extends StatelessWidget {
+  final String orderNumber;
+  final String itemCount;
+  final double totalAmount;
+  final String status;
+  final String imageUrl;
+  final VoidCallback onViewDetails;
+
+  const OrderCard({
+    super.key,
+    required this.orderNumber,
+    required this.itemCount,
+    required this.totalAmount,
+    required this.status,
+    required this.imageUrl,
+    required this.onViewDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: isDark ? Colors.white : Colors.black,
-            ),
-            onPressed: () => Get.back(),
-          ),
-          title: Text(
-            'My Orders',
-            style: AppTextStyle.withColor(
-              AppTextStyle.h3,
-              isDark ? Colors.white : Colors.black,
-            ),
-          ),
-          bottom: TabBar(
-            labelColor: Theme.of(context).primaryColor,
-            unselectedLabelColor: isDark ? Colors.grey[400] : Colors.grey[600],
-            indicatorColor: Theme.of(context).primaryColor,
-            tabs: const [
-              Tab(text: 'Active'),
-              Tab(text: 'Completed'),
-              Tab(text: 'Cancelled'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildOrderList(context, 'active'),
-            _buildOrderList(context, 'completed'),
-            _buildOrderList(context, 'cancelled'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildOrderList(BuildContext context, String type) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 5, // Replace with actual order count
-      itemBuilder: (context, index) => _buildOrderCard(context, type),
-    );
-  }
-
-  Widget _buildOrderCard(BuildContext context, String type) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
@@ -87,8 +50,8 @@ class MyOrdersScreen extends StatelessWidget {
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/shoe.jpg'),
+                    image: DecorationImage(
+                      image: AssetImage(imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -99,7 +62,7 @@ class MyOrdersScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Order #1234',
+                        'Order #$orderNumber',
                         style: AppTextStyle.withColor(
                           AppTextStyle.h3,
                           Theme.of(context).textTheme.bodyLarge!.color!,
@@ -107,14 +70,14 @@ class MyOrdersScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '2 items • \$299.99',
+                        '$itemCount items • \$${totalAmount.toStringAsFixed(2)}',
                         style: AppTextStyle.withColor(
                           AppTextStyle.bodyMedium,
                           isDark ? Colors.grey[400]! : Colors.grey[600]!,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      _buildStatusChip(context, type),
+                      _buildStatusChip(context, status),
                     ],
                   ),
                 ),
@@ -123,7 +86,7 @@ class MyOrdersScreen extends StatelessWidget {
           ),
           Divider(height: 1, color: Colors.grey.shade200),
           InkWell(
-            onTap: () {},
+            onTap: onViewDetails,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Text(
