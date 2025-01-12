@@ -108,8 +108,6 @@ class AccountScreen extends StatelessWidget {
     final menuItems = [
       {'icon': Icons.shopping_bag_outlined, 'title': 'My Orders'},
       {'icon': Icons.location_on_outlined, 'title': 'Shipping Address'},
-      {'icon': Icons.payment_outlined, 'title': 'Payment Methods'},
-      {'icon': Icons.local_offer_outlined, 'title': 'My Vouchers'},
       {'icon': Icons.help_outline, 'title': 'Help Center'},
       {'icon': Icons.logout_outlined, 'title': 'Logout'},
     ];
