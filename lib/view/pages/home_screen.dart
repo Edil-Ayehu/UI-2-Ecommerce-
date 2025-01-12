@@ -1,4 +1,5 @@
 import 'package:ecommerce_ui/controllers/theme_controller.dart';
+import 'package:ecommerce_ui/view/pages/all_products_screen.dart';
 import 'package:ecommerce_ui/view/widgets/custom_search_bar.dart';
 import 'package:ecommerce_ui/view/widgets/product_grid.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // search bar 
+            // search bar
             const CustomSearchBar(),
 
             // category chips
@@ -78,22 +79,26 @@ class HomeScreen extends StatelessWidget {
             const SaleBanner(),
 
             // popular product
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Popular Product',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    'See All',
-                    style: TextStyle(
-                      color: Colors.grey,
+                  GestureDetector(
+                    onTap: () => Get.to(() => const AllProductsScreen()),
+                    child: Text(
+                      'See All',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ],
