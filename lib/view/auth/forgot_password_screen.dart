@@ -19,6 +19,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Back Button
               IconButton(
                 onPressed: () => Get.back(),
                 icon: Icon(
@@ -27,6 +28,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              // Reset Password Text
               Text(
                 'Reset Password',
                 style: AppTextStyle.withColor(
@@ -43,51 +45,29 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-CustomTextField(
-  label: 'Email',
-  prefixIcon: Icons.email_outlined,
-  keyboardType: TextInputType.emailAddress,
-  controller: _emailController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  },
-),
+              // Email TextField
+              CustomTextField(
+                label: 'Email',
+                prefixIcon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!GetUtils.isEmail(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 24),
+              // Send Reset Link Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Show success dialog
-                    Get.dialog(
-                      AlertDialog(
-                        title: Text(
-                          'Check Your Email',
-                          style: AppTextStyle.h3,
-                        ),
-                        content: Text(
-                          'We have sent password recovery instructions to your email.',
-                          style: AppTextStyle.bodyMedium,
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Get.back(),
-                            child: Text(
-                              'OK',
-                              style: AppTextStyle.withColor(
-                                AppTextStyle.buttonMedium,
-                                Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    showSuccessDialog(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
@@ -108,6 +88,34 @@ CustomTextField(
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // show success dialog
+  void showSuccessDialog(BuildContext context) {
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Check Your Email',
+          style: AppTextStyle.h3,
+        ),
+        content: Text(
+          'We have sent password recovery instructions to your email.',
+          style: AppTextStyle.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'OK',
+              style: AppTextStyle.withColor(
+                AppTextStyle.buttonMedium,
+                Theme.of(context).primaryColor,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

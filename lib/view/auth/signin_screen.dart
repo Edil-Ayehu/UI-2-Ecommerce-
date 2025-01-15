@@ -41,9 +41,10 @@ class SignInScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-CustomTextField(
-  label: 'Email',
-  prefixIcon: Icons.email_outlined,
+              // Email TextField
+              CustomTextField(
+                label: 'Email',
+                prefixIcon: Icons.email_outlined,
   keyboardType: TextInputType.emailAddress,
   controller: _emailController,
   validator: (value) {
@@ -57,6 +58,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 16),
+              // Password TextField
 CustomTextField(
   label: 'Password',
   prefixIcon: Icons.lock_outline,
@@ -71,6 +73,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 8),
+              // Forgot Password TextButton
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -85,6 +88,7 @@ CustomTextField(
                 ),
               ),
               const SizedBox(height: 24),
+              // Sign In Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -106,6 +110,7 @@ CustomTextField(
                 ),
               ),
               const SizedBox(height: 24),
+              // Sign Up TextButton
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -135,57 +140,10 @@ CustomTextField(
     );
   }
 
+  // Sign In Button onPressed
   void _handleSignIn() {
     final AuthController authController = Get.find<AuthController>();
     authController.login();
     Get.offAll(() => const MainScreen());
-  }
-
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    IconData icon,
-    TextInputType keyboardType, {
-    bool isPassword = false,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return TextField(
-      obscureText: isPassword,
-      keyboardType: keyboardType,
-      style: AppTextStyle.withColor(
-        AppTextStyle.bodyMedium,
-        Theme.of(context).textTheme.bodyLarge!.color!,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: AppTextStyle.withColor(
-          AppTextStyle.bodyMedium,
-          isDark ? Colors.grey[400]! : Colors.grey[600]!,
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
-          ),
-        ),
-      ),
-    );
   }
 }

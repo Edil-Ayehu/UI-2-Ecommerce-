@@ -24,6 +24,7 @@ class SignUpScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Back Button
               IconButton(
                 onPressed: () => Get.back(),
                 icon: Icon(
@@ -48,6 +49,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
+              // Full Name TextField
 CustomTextField(
   label: 'Full Name',
   prefixIcon: Icons.person_outline,
@@ -61,6 +63,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 16),
+              // Email TextField
 CustomTextField(
   label: 'Email',
   prefixIcon: Icons.email_outlined,
@@ -77,6 +80,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 16),
+              // Password TextField
 CustomTextField(
   label: 'Password',
   prefixIcon: Icons.lock_outline,
@@ -91,6 +95,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 16),
+              // Confirm Password TextField
 CustomTextField(
   label: 'Confirm Password',
   prefixIcon: Icons.lock_outline,
@@ -108,6 +113,7 @@ CustomTextField(
   },
 ),
               const SizedBox(height: 24),
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -129,6 +135,7 @@ CustomTextField(
                 ),
               ),
               const SizedBox(height: 24),
+              // Sign In TextButton
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -152,54 +159,6 @@ CustomTextField(
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    IconData icon,
-    TextInputType keyboardType, {
-    bool isPassword = false,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return TextField(
-      obscureText: isPassword,
-      keyboardType: keyboardType,
-      style: AppTextStyle.withColor(
-        AppTextStyle.bodyMedium,
-        Theme.of(context).textTheme.bodyLarge!.color!,
-      ),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: AppTextStyle.withColor(
-          AppTextStyle.bodyMedium,
-          isDark ? Colors.grey[400]! : Colors.grey[600]!,
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
           ),
         ),
       ),
