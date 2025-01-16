@@ -8,30 +8,54 @@ class SizeSelector extends StatefulWidget {
 }
 
 class _SizeSelectorState extends State<SizeSelector> {
-  int selectedSize = 2;
-  final sizes = ['S', 'M', 'L', 'XL'];
+  int _selectedIndex = 0;
+  final List<String> _sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(
-        sizes.length,
-        (index) => Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: ChoiceChip(
-            label: Text(sizes[index]),
-            selected: selectedSize == index,
-            onSelected: (bool selected) {
-              setState(() {
-                selectedSize = selected ? index : selectedSize;
-              });
-            },
-            selectedColor: Theme.of(context).primaryColor,
-            labelStyle: TextStyle(
-              color: selectedSize == index ? Colors.white : Colors.black,
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return SizedBox(
+      height: 50,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _sizes.length,
+        itemBuilder: (context, index) {
+          final isSelected = _selectedIndex == index;
+          return GestureDetector(
+            onTap: () => setState(() => _selectedIndex = index),
+            child: Container(
+              width: 50,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isSelected
+                      ? Theme.of(context).primaryColor
+                      : isDark
+                          ? Colors.grey[700]!
+                          : Colors.grey[300]!,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  _sizes[index],
+                  style: TextStyle(
+                    color: isSelected
+                        ? Colors.white
+                        : isDark
+                            ? Colors.grey[300]
+                            : Colors.grey[700],
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
