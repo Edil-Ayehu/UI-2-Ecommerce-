@@ -45,33 +45,33 @@ class SignInScreen extends StatelessWidget {
               CustomTextField(
                 label: 'Email',
                 prefixIcon: Icons.email_outlined,
-  keyboardType: TextInputType.emailAddress,
-  controller: _emailController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  },
-),
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!GetUtils.isEmail(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 16),
               // Password TextField
-CustomTextField(
-  label: 'Password',
-  prefixIcon: Icons.lock_outline,
-  keyboardType: TextInputType.visiblePassword,
-  isPassword: true,
-  controller: _passwordController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  },
-),
+              CustomTextField(
+                label: 'Password',
+                prefixIcon: Icons.lock_outline,
+                keyboardType: TextInputType.visiblePassword,
+                isPassword: true,
+                controller: _passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 8),
               // Forgot Password TextButton
               Align(

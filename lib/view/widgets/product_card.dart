@@ -38,6 +38,7 @@ class ProductCard extends StatelessWidget {
         children: [
           Stack(
             children: [
+              // image
               AspectRatio(
                 aspectRatio: 16 / 9,
                 child: ClipRRect(
@@ -51,6 +52,7 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
+              // favorite button
               Positioned(
                 right: 8,
                 top: 8,
@@ -81,6 +83,7 @@ class ProductCard extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
+                    // discount text
                     child: Text(
                       '${calculateDiscount(product.price, product.oldPrice!)}% OFF',
                       style: AppTextStyle.withColor(
@@ -95,6 +98,7 @@ class ProductCard extends StatelessWidget {
                 ),
             ],
           ),
+          // product details
           Padding(
             padding: EdgeInsets.all(screenWidth * 0.02),
             child: Column(

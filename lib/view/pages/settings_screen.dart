@@ -1,3 +1,5 @@
+import 'package:ecommerce_ui/view/pages/privacy_policy_screen.dart';
+import 'package:ecommerce_ui/view/pages/terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
@@ -66,12 +68,14 @@ class SettingsScreen extends StatelessWidget {
                   'Privacy Policy',
                   'View our privacy policy',
                   Icons.privacy_tip_outlined,
+                  onTap: () => Get.to(() => const PrivacyPolicyScreen()),
                 ),
                 _buildNavigationTile(
                   context,
                   'Terms of Service',
                   'Read our terms of service',
                   Icons.description_outlined,
+                  onTap: () => Get.to(() => const TermsOfServiceScreen()),
                 ),
               ],
             ),
@@ -207,49 +211,52 @@ class SettingsScreen extends StatelessWidget {
     BuildContext context,
     String title,
     String subtitle,
-    IconData icon,
-  ) {
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withOpacity(0.2)
-                : Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.grey.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: ListTile(
+          leading: Icon(
+            icon,
+            color: Theme.of(context).primaryColor,
           ),
-        ],
-      ),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: Theme.of(context).primaryColor,
-        ),
-        title: Text(
-          title,
-          style: AppTextStyle.withColor(
-            AppTextStyle.bodyMedium,
-            Theme.of(context).textTheme.bodyLarge!.color!,
+          title: Text(
+            title,
+            style: AppTextStyle.withColor(
+              AppTextStyle.bodyMedium,
+              Theme.of(context).textTheme.bodyLarge!.color!,
+            ),
+          ),
+          subtitle: Text(
+            subtitle,
+            style: AppTextStyle.withColor(
+              AppTextStyle.bodySmall,
+              isDark ? Colors.grey[400]! : Colors.grey[600]!,
+            ),
+          ),
+          trailing: Icon(
+            Icons.chevron_right,
+            color: isDark ? Colors.grey[400] : Colors.grey[600],
           ),
         ),
-        subtitle: Text(
-          subtitle,
-          style: AppTextStyle.withColor(
-            AppTextStyle.bodySmall,
-            isDark ? Colors.grey[400]! : Colors.grey[600]!,
-          ),
-        ),
-        trailing: Icon(
-          Icons.chevron_right,
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
-        ),
-        onTap: () {},
       ),
     );
   }

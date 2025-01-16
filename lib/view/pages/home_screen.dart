@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
                     backgroundImage: AssetImage('assets/images/avatar.jpg'),
                   ),
                   const SizedBox(width: 12),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
@@ -106,9 +106,8 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Expanded(
-              child: ProductGrid(),
-            ),
+            // product grid
+            const Expanded(child: ProductGrid()),
           ],
         ),
       ),
