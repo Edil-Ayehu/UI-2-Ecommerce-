@@ -49,14 +49,17 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   const Spacer(),
+                  // notification button
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined),
                     onPressed: () => Get.to(() => const NotificationsScreen()),
                   ),
+                  // cart button
                   IconButton(
                     icon: const Icon(Icons.shopping_bag_outlined),
                     onPressed: () => Get.to(() => const CartScreen()),
                   ),
+                  // theme button
                   GetBuilder<ThemeController>(
                     builder: (controller) => IconButton(
                       icon: Icon(

@@ -160,6 +160,7 @@ class ProductCard extends StatelessWidget {
   }
 }
 
+// calculate discount
 int calculateDiscount(double currentPrice, double oldPrice) {
   return (((oldPrice - currentPrice) / oldPrice) * 100).round();
 }

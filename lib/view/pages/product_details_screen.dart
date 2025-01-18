@@ -32,6 +32,7 @@ class ProductDetailsScreen extends StatelessWidget {
           ),
         ),
         actions: [
+          // share button
           IconButton(
             icon: Icon(
               Icons.share,
@@ -48,6 +49,7 @@ class ProductDetailsScreen extends StatelessWidget {
           children: [
             Stack(
               children: [
+                // image
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: Image.asset(
@@ -56,6 +58,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                // favorite button
                 Positioned(
                   right: screenWidth * 0.04,
                   top: screenWidth * 0.04,
@@ -73,6 +76,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
+            // product details
             Padding(
               padding: EdgeInsets.all(screenWidth * 0.04),
               child: Column(
@@ -115,6 +119,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.01),
+                  // size selector
                   const SizeSelector(),
                   SizedBox(height: screenHeight * 0.02),
                   Text(
