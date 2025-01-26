@@ -1,10 +1,15 @@
+import 'package:ecommerce_ui/view/shipping%20address/models/address.dart';
+import 'package:ecommerce_ui/view/shipping%20address/repositories/address_repository.dart';
 import 'package:ecommerce_ui/view/shipping%20address/widgets/address_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
+
 class ShippingAddressScreen extends StatelessWidget {
-  const ShippingAddressScreen({super.key});
+  final AddressRepository _repository = AddressRepository();
+
+  ShippingAddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +44,17 @@ class ShippingAddressScreen extends StatelessWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: 2, // Replace with actual address count
-        itemBuilder: (context, index) => _buildAddressCard(context),
+        itemCount: _repository.getAddresses().length,
+        itemBuilder: (context, index) => _buildAddressCard(context, index),
       ),
     );
   }
 
-Widget _buildAddressCard(BuildContext context) {
+Widget _buildAddressCard(BuildContext context, int index) {
+  final address = _repository.getAddresses()[index];
   return AddressCard(
-    onEdit: () => _showEditAddressBottomSheet(context),
+    address: address,
+    onEdit: () => _showEditAddressBottomSheet(context, address),
     onDelete: () => _showDeleteConfirmation(context),
   );
 }
@@ -138,8 +145,7 @@ Widget _buildAddressCard(BuildContext context) {
     );
   }
 
-  void _showEditAddressBottomSheet(BuildContext context) {
-    // Similar to _showAddAddressBottomSheet but with pre-filled values
+  void _showEditAddressBottomSheet(BuildContext context, Address address) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     Get.bottomSheet(
@@ -175,25 +181,25 @@ Widget _buildAddressCard(BuildContext context) {
             const SizedBox(height: 24),
             _buildTextField(
                 context, 'Label (e.g., Home, Office)', Icons.label_outline,
-                initialValue: 'Home'),
+                initialValue: address.label),
             const SizedBox(height: 16),
             _buildTextField(context, 'Full Address', Icons.location_on_outlined,
-                initialValue: '123 Main Street, Apt 4B'),
+                initialValue: address.fullAddress),
             const SizedBox(height: 16),
             _buildTextField(context, 'City', Icons.location_city_outlined,
-                initialValue: 'New York'),
+                initialValue: address.city),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: _buildTextField(context, 'State', Icons.map_outlined,
-                      initialValue: 'NY'),
+                      initialValue: address.state),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildTextField(
                       context, 'ZIP Code', Icons.pin_outlined,
-                      initialValue: '10001'),
+                      initialValue: address.zipCode),
                 ),
               ],
             ),

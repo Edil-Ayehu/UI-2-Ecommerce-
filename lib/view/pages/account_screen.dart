@@ -155,7 +155,7 @@ class AccountScreen extends StatelessWidget {
                 } else if (item['title'] == 'My Orders') {
                   Get.to(() => MyOrdersScreen());
                 } else if (item['title'] == 'Shipping Address') {
-                  Get.to(() => const ShippingAddressScreen());
+                  Get.to(() => ShippingAddressScreen());
                 } else if (item['title'] == 'Help Center') {
                   Get.to(() => const HelpCenterScreen());
                 }

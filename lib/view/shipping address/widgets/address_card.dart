@@ -1,12 +1,15 @@
+import 'package:ecommerce_ui/view/shipping%20address/models/address.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class AddressCard extends StatelessWidget {
+  final Address address;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const AddressCard({
     super.key,
+    required this.address,
     required this.onEdit,
     required this.onDelete,
   });
@@ -56,37 +59,39 @@ class AddressCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            'Home',
+                            address.label,
                             style: AppTextStyle.withColor(
                               AppTextStyle.h3,
                               Theme.of(context).textTheme.bodyLarge!.color!,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Default',
-                              style: AppTextStyle.withColor(
-                                AppTextStyle.bodySmall,
-                                Theme.of(context).primaryColor,
+                          if (address.isDefault) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Default',
+                                style: AppTextStyle.withColor(
+                                  AppTextStyle.bodySmall,
+                                  Theme.of(context).primaryColor,
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '123 Main Street, Apt 4B\nNew York, NY 10001\nUnited States',
+                        '${address.fullAddress}\n${address.city}, ${address.state} ${address.zipCode}',
                         style: AppTextStyle.withColor(
                           AppTextStyle.bodyMedium,
                           isDark ? Colors.grey[400]! : Colors.grey[600]!,
