@@ -1,10 +1,14 @@
+import 'package:ecommerce_ui/view/my%20orders/model/order.dart';
+import 'package:ecommerce_ui/view/my%20orders/repository/order_repository.dart';
 import 'package:ecommerce_ui/view/my%20orders/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class MyOrdersScreen extends StatelessWidget {
-  const MyOrdersScreen({super.key});
+  final OrderRepository _repository = OrderRepository();
+
+  MyOrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,140 +46,26 @@ class MyOrdersScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            _buildOrderList(context, 'active'),
-            _buildOrderList(context, 'completed'),
-            _buildOrderList(context, 'cancelled'),
+            _buildOrderList(context, OrderStatus.active),
+            _buildOrderList(context, OrderStatus.completed),
+            _buildOrderList(context, OrderStatus.cancelled),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOrderList(BuildContext context, String type) {
+  Widget _buildOrderList(BuildContext context, OrderStatus status) {
+    final orders = _repository.getOrdersByStatus(status);
+    
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: 5, // Replace with actual order count
+      itemCount: orders.length,
       itemBuilder: (context, index) => OrderCard(
-        orderNumber: '1234',
-        itemCount: '2',
-        totalAmount: 299.99,
-        status: type,
-        imageUrl: 'assets/images/shoe.jpg',
+        order: orders[index],
         onViewDetails: () {
           // Handle view details action
         },
-      ),
-    );
-  }
-
-  Widget _buildOrderCard(BuildContext context, String type) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withOpacity(0.2)
-                : Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/shoe.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Order #1234',
-                        style: AppTextStyle.withColor(
-                          AppTextStyle.h3,
-                          Theme.of(context).textTheme.bodyLarge!.color!,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '2 items • \$299.99',
-                        style: AppTextStyle.withColor(
-                          AppTextStyle.bodyMedium,
-                          isDark ? Colors.grey[400]! : Colors.grey[600]!,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildStatusChip(context, type),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Divider(height: 1, color: Colors.grey.shade200),
-          InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(
-                'View Details',
-                style: AppTextStyle.withColor(
-                  AppTextStyle.buttonMedium,
-                  Theme.of(context).primaryColor,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusChip(BuildContext context, String type) {
-    Color getStatusColor() {
-      switch (type) {
-        case 'active':
-          return Colors.blue;
-        case 'completed':
-          return Colors.green;
-        case 'cancelled':
-          return Colors.red;
-        default:
-          return Colors.grey;
-      }
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-      decoration: BoxDecoration(
-        color: getStatusColor().withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        type.capitalize!,
-        style: AppTextStyle.withColor(
-          AppTextStyle.bodySmall,
-          getStatusColor(),
-        ),
       ),
     );
   }

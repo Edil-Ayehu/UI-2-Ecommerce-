@@ -67,8 +67,7 @@ class CartScreen extends StatelessWidget {
         children: [
           // Product Image
           ClipRRect(
-            borderRadius:
-                const BorderRadius.horizontal(left: Radius.circular(16)),
+            borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
             child: Image.asset(
               product.imageUrl,
               width: 100,

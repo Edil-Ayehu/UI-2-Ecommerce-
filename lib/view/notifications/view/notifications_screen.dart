@@ -1,13 +1,19 @@
+import 'package:ecommerce_ui/view/notifications/models/notification_type.dart';
+import 'package:ecommerce_ui/view/notifications/repositories/notification_repository.dart';
+import 'package:ecommerce_ui/view/notifications/utils/notification_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
 class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({super.key});
+  final NotificationRepository _repository = NotificationRepository();
+
+  NotificationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final notifications = _repository.getNotifications();
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -41,10 +47,10 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: _demoNotifications.length,
+        itemCount: notifications.length,
         itemBuilder: (context, index) => _buildNotificationCard(
           context,
-          _demoNotifications[index],
+          notifications[index],
         ),
       ),
     );
@@ -75,12 +81,12 @@ class NotificationsScreen extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: _getIconBackgroundColor(context, notification.type),
+            color: NotificationUtils.getIconBackgroundColor(context, notification.type),
             shape: BoxShape.circle,
           ),
           child: Icon(
-            _getNotificationIcon(notification.type),
-            color: _getIconColor(context, notification.type),
+            NotificationUtils.getNotificationIcon(notification.type),
+            color: NotificationUtils.getIconColor(context, notification.type),
           ),
         ),
         title: Text(
@@ -114,91 +120,4 @@ class NotificationsScreen extends StatelessWidget {
       ),
     );
   }
-
-  IconData _getNotificationIcon(NotificationType type) {
-    switch (type) {
-      case NotificationType.order:
-        return Icons.shopping_bag_outlined;
-      case NotificationType.delivery:
-        return Icons.local_shipping_outlined;
-      case NotificationType.promo:
-        return Icons.local_offer_outlined;
-      case NotificationType.payment:
-        return Icons.payment_outlined;
-    }
-  }
-
-  Color _getIconBackgroundColor(BuildContext context, NotificationType type) {
-    switch (type) {
-      case NotificationType.order:
-        return Theme.of(context).primaryColor.withOpacity(0.1);
-      case NotificationType.delivery:
-        return Colors.green[100]!;
-      case NotificationType.promo:
-        return Colors.orange[100]!;
-      case NotificationType.payment:
-        return Colors.red[100]!;
-    }
-  }
-
-  Color _getIconColor(BuildContext context, NotificationType type) {
-    switch (type) {
-      case NotificationType.order:
-        return Theme.of(context).primaryColor;
-      case NotificationType.delivery:
-        return Colors.green;
-      case NotificationType.promo:
-        return Colors.orange;
-      case NotificationType.payment:
-        return Colors.red;
-    }
-  }
 }
-
-enum NotificationType { order, delivery, promo, payment }
-
-class NotificationItem {
-  final String title;
-  final String message;
-  final String time;
-  final NotificationType type;
-  final bool isRead;
-
-  NotificationItem({
-    required this.title,
-    required this.message,
-    required this.time,
-    required this.type,
-    this.isRead = false,
-  });
-}
-
-final List<NotificationItem> _demoNotifications = [
-  NotificationItem(
-    title: 'Order Confirmed!',
-    message: 'Your order #12345 has been confirmed and is being processed.',
-    time: '2 minutes ago',
-    type: NotificationType.order,
-  ),
-  NotificationItem(
-    title: 'Special Offer!',
-    message: 'Get 20% off on all shoes this weekend!',
-    time: '1 hour ago',
-    type: NotificationType.promo,
-    isRead: true,
-  ),
-  NotificationItem(
-    title: 'Out for Delivery',
-    message: 'Your order #12344 is out for delivery.',
-    time: '3 hours ago',
-    type: NotificationType.delivery,
-    isRead: true,
-  ),
-  NotificationItem(
-    title: 'Payment Successful',
-    message: 'Payment for order #12345 was successful.',
-    time: '5 hours ago',
-    type: NotificationType.payment,
-    isRead: true,
-  ),
-];

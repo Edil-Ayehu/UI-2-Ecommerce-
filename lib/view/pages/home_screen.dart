@@ -1,7 +1,7 @@
 import 'package:ecommerce_ui/controllers/theme_controller.dart';
 import 'package:ecommerce_ui/view/pages/all_products_screen.dart';
 import 'package:ecommerce_ui/view/pages/cart_screen.dart';
-import 'package:ecommerce_ui/view/pages/notifications_screen.dart';
+import 'package:ecommerce_ui/view/notifications/view/notifications_screen.dart';
 import 'package:ecommerce_ui/view/widgets/custom_search_bar.dart';
 import 'package:ecommerce_ui/view/widgets/product_grid.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                   // notification button
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () => Get.to(() => const NotificationsScreen()),
+                    onPressed: () => Get.to(() => NotificationsScreen()),
                   ),
                   // cart button
                   IconButton(

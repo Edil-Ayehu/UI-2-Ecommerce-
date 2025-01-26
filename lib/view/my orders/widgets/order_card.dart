@@ -1,22 +1,15 @@
+import 'package:ecommerce_ui/view/my%20orders/model/order.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:get/get.dart';
 
 class OrderCard extends StatelessWidget {
-  final String orderNumber;
-  final String itemCount;
-  final double totalAmount;
-  final String status;
-  final String imageUrl;
+  final Order order;
   final VoidCallback onViewDetails;
 
   const OrderCard({
     super.key,
-    required this.orderNumber,
-    required this.itemCount,
-    required this.totalAmount,
-    required this.status,
-    required this.imageUrl,
+    required this.order,
     required this.onViewDetails,
   });
 
@@ -51,7 +44,7 @@ class OrderCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     image: DecorationImage(
-                      image: AssetImage(imageUrl),
+                      image: AssetImage(order.imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -62,7 +55,7 @@ class OrderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Order #$orderNumber',
+                        'Order #${order.orderNumber}',
                         style: AppTextStyle.withColor(
                           AppTextStyle.h3,
                           Theme.of(context).textTheme.bodyLarge!.color!,
@@ -70,14 +63,14 @@ class OrderCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '$itemCount items • \$${totalAmount.toStringAsFixed(2)}',
+                        '${order.itemCount} items • \$${order.totalAmount.toStringAsFixed(2)}',
                         style: AppTextStyle.withColor(
                           AppTextStyle.bodyMedium,
                           isDark ? Colors.grey[400]! : Colors.grey[600]!,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      _buildStatusChip(context, status),
+                      _buildStatusChip(context, order.statusString),
                     ],
                   ),
                 ),
