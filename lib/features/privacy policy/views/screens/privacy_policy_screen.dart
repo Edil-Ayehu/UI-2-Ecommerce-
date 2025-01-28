@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
-class TermsOfServiceScreen extends StatelessWidget {
-  const TermsOfServiceScreen({super.key});
+class PrivacyPolicyScreen extends StatelessWidget {
+  const PrivacyPolicyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class TermsOfServiceScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'Terms of Service',
+          'Privacy Policy',
           style: AppTextStyle.withColor(
             AppTextStyle.h3,
             isDark ? Colors.white : Colors.black,
@@ -36,28 +36,28 @@ class TermsOfServiceScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const InfoSection(
-                title: 'Welcome to Fashion Store',
-                content: 'By accessing and using this application, you accept and agree to be bound by the terms and provision of this agreement.',
+                title: 'Information We Collect',
+                content: 'We collect information that you provide directly to us, including name, email address, and shipping information.',
               ),
               const InfoSection(
-                title: 'Account Registration',
-                content: 'To use certain features of the application, you must register for an account. You agree to provide accurate information and keep it updated.',
+                title: 'How We Use Your Information',
+                content: 'We use the information we collect to provide, maintain, and improve our services, process your transactions, and send you updates.',
               ),
               const InfoSection(
-                title: 'User Responsibilities',
-                content: 'You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.',
+                title: 'Information Sharing',
+                content: 'We do not sell or share your personal information with third parties except as described in this policy.',
               ),
               const InfoSection(
-                title: 'Privacy Policy',
-                content: 'Your privacy is important to us. Please review our Privacy Policy to understand how we collect and use your information.',
+                title: 'Data Security',
+                content: 'We implement appropriate security measures to protect your personal information from unauthorized access or disclosure.',
               ),
               const InfoSection(
-                title: 'Intellectual Property',
-                content: 'All content included in this application is the property of Fashion Store or its content suppliers and protected by international copyright laws.',
+                title: 'Your Rights',
+                content: 'You have the right to access, correct, or delete your personal information. Contact us to exercise these rights.',
               ),
               const InfoSection(
-                title: 'Termination',
-                content: 'We reserve the right to terminate or suspend your account and access to our services at our sole discretion, without notice.',
+                title: 'Cookie Policy',
+                content: 'We use cookies and similar technologies to enhance your experience and collect usage information.',
               ),
               const SizedBox(height: 24),
               Text(
