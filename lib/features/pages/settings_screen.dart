@@ -1,5 +1,5 @@
 import 'package:ecommerce_ui/features/privacy%20policy/views/screens/privacy_policy_screen.dart';
-import 'package:ecommerce_ui/features/pages/terms_of_service_screen.dart';
+import 'package:ecommerce_ui/features/terms%20of%20service/views/screens/terms_of_service_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';

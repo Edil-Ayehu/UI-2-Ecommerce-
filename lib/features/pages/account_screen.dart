@@ -4,7 +4,7 @@ import 'package:ecommerce_ui/features/my%20orders/my_orders_screen.dart';
 import 'package:ecommerce_ui/features/auth/signin_screen.dart';
 import 'package:ecommerce_ui/features/edit%20profile/views/screens/edit_profile_screen.dart';
 import 'package:ecommerce_ui/features/help%20center/views/screens/help_center_screen.dart';
-import 'package:ecommerce_ui/features/terms%20of%20service/views/screens/settings_screen.dart';
+import 'package:ecommerce_ui/features/pages/settings_screen.dart';
 import 'package:ecommerce_ui/features/shipping%20address/shipping_address_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
