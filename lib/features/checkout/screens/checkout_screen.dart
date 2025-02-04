@@ -2,6 +2,7 @@ import 'package:ecommerce_ui/features/checkout/widgets/address_card.dart';
 import 'package:ecommerce_ui/features/checkout/widgets/checkout_bottom_bar.dart';
 import 'package:ecommerce_ui/features/checkout/widgets/order_summary_card.dart';
 import 'package:ecommerce_ui/features/checkout/widgets/payment_method_card.dart';
+import 'package:ecommerce_ui/features/order%20confirmation/screens/order_confirmation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
@@ -52,9 +53,18 @@ class CheckoutScreen extends StatelessWidget {
       ),
       bottomNavigationBar: CheckoutBottomBar(
         totalAmount: 662.43,
-        onPlaceOrder: () {
-          // Handle place order logic here
-        },
+  onPlaceOrder: () {
+    // Generate a random order number (in real app, this would come from backend)
+    final orderNumber = 'ORD${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+    
+    Get.to(
+      () => OrderConfirmationScreen(
+        orderNumber: orderNumber,
+        totalAmount: 662.43,
+      ),
+      transition: Transition.fadeIn,
+    );
+  },
       ),
     );
   }
