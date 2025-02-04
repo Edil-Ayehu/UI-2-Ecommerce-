@@ -1,4 +1,4 @@
-import 'package:ecommerce_ui/features/pages/checkout_screen.dart';
+import 'package:ecommerce_ui/features/checkout/screens/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
