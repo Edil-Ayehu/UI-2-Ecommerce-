@@ -1,4 +1,5 @@
 import 'package:ecommerce_ui/controllers/theme_controller.dart';
+import 'package:ecommerce_ui/controllers/auth_controller.dart';
 import 'package:ecommerce_ui/features/pages/all_products_screen.dart';
 import 'package:ecommerce_ui/features/pages/cart_screen.dart';
 import 'package:ecommerce_ui/features/notifications/view/notifications_screen.dart';
@@ -29,24 +30,28 @@ class HomeScreen extends StatelessWidget {
                     backgroundImage: AssetImage('assets/images/avatar.jpg'),
                   ),
                   const SizedBox(width: 12),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'Hello Alex',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
+                  Expanded(
+                    child: GetX<AuthController>(
+                      builder: (authController) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Hello ${authController.userName?.split(' ').first ?? 'User'}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const Text(
+                            'Good Morning!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Good Morning!',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const Spacer(),
                   // notification button

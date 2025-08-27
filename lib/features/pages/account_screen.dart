@@ -50,6 +50,7 @@ class AccountScreen extends StatelessWidget {
 
   Widget _buildProfileSection(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final AuthController authController = Get.find<AuthController>();
 
     return Container(
       width: double.infinity,
@@ -65,21 +66,21 @@ class AccountScreen extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/avatar.jpg'),
           ),
           const SizedBox(height: 16),
-          Text(
-            'Alex Johnson',
-            style: AppTextStyle.withColor(
-              AppTextStyle.h2,
-              Theme.of(context).textTheme.bodyLarge!.color!,
-            ),
-          ),
+          Obx(() => Text(
+                authController.userName ?? 'User',
+                style: AppTextStyle.withColor(
+                  AppTextStyle.h2,
+                  Theme.of(context).textTheme.bodyLarge!.color!,
+                ),
+              )),
           const SizedBox(height: 4),
-          Text(
-            'alex.johnson@example.com',
-            style: AppTextStyle.withColor(
-              AppTextStyle.bodyMedium,
-              isDark ? Colors.grey[400]! : Colors.grey[600]!,
-            ),
-          ),
+          Obx(() => Text(
+                authController.userEmail ?? 'No email',
+                style: AppTextStyle.withColor(
+                  AppTextStyle.bodyMedium,
+                  isDark ? Colors.grey[400]! : Colors.grey[600]!,
+                ),
+              )),
           const SizedBox(height: 16),
           OutlinedButton(
             onPressed: () => Get.to(() => const EditProfileScreen()),
@@ -237,11 +238,53 @@ class AccountScreen extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final AuthController authController =
                           Get.find<AuthController>();
-                      authController.logout();
-                      Get.offAll(() => SignInScreen());
+
+                      // Show loading indicator
+                      Get.dialog(
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        barrierDismissible: false,
+                      );
+
+                      try {
+                        final result = await authController.signOut();
+
+                        // Close loading dialog
+                        Get.back();
+
+                        if (result.success) {
+                          Get.snackbar(
+                            'Success',
+                            result.message,
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                          Get.offAll(() => SignInScreen());
+                        } else {
+                          Get.snackbar(
+                            'Error',
+                            result.message,
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                        }
+                      } catch (e) {
+                        // Close loading dialog
+                        Get.back();
+                        Get.snackbar(
+                          'Error',
+                          'An unexpected error occurred. Please try again.',
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,

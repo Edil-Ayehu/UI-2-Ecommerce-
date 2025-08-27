@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/features/auth/signin_screen.dart';
+import 'package:ecommerce_ui/controllers/auth_controller.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -11,7 +12,8 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,74 +52,74 @@ class SignUpScreen extends StatelessWidget {
               ),
               const SizedBox(height: 40),
               // Full Name TextField
-CustomTextField(
-  label: 'Full Name',
-  prefixIcon: Icons.person_outline,
-  keyboardType: TextInputType.name,
-  controller: _nameController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your name';
-    }
-    return null;
-  },
-),
+              CustomTextField(
+                label: 'Full Name',
+                prefixIcon: Icons.person_outline,
+                keyboardType: TextInputType.name,
+                controller: _nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 16),
               // Email TextField
-CustomTextField(
-  label: 'Email',
-  prefixIcon: Icons.email_outlined,
-  keyboardType: TextInputType.emailAddress,
-  controller: _emailController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    if (!GetUtils.isEmail(value)) {
-      return 'Please enter a valid email';
-    }
-    return null;
-  },
-),
+              CustomTextField(
+                label: 'Email',
+                prefixIcon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!GetUtils.isEmail(value)) {
+                    return 'Please enter a valid email';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 16),
               // Password TextField
-CustomTextField(
-  label: 'Password',
-  prefixIcon: Icons.lock_outline,
-  keyboardType: TextInputType.visiblePassword,
-  isPassword: true,
-  controller: _passwordController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  },
-),
+              CustomTextField(
+                label: 'Password',
+                prefixIcon: Icons.lock_outline,
+                keyboardType: TextInputType.visiblePassword,
+                isPassword: true,
+                controller: _passwordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 16),
               // Confirm Password TextField
-CustomTextField(
-  label: 'Confirm Password',
-  prefixIcon: Icons.lock_outline,
-  keyboardType: TextInputType.visiblePassword,
-  isPassword: true,
-  controller: _confirmPasswordController,
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
-    return null;
-  },
-),
+              CustomTextField(
+                label: 'Confirm Password',
+                prefixIcon: Icons.lock_outline,
+                keyboardType: TextInputType.visiblePassword,
+                isPassword: true,
+                controller: _confirmPasswordController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please confirm your password';
+                  }
+                  if (value != _passwordController.text) {
+                    return 'Passwords do not match';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 24),
               // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Get.off(() => MainScreen()),
+                  onPressed: _handleSignUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -163,5 +165,125 @@ CustomTextField(
         ),
       ),
     );
+  }
+
+  // Sign Up Button onPressed
+  void _handleSignUp() async {
+    // Validate input fields
+    if (_nameController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter your name',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (_emailController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter your email',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (!GetUtils.isEmail(_emailController.text.trim())) {
+      Get.snackbar(
+        'Error',
+        'Please enter a valid email address',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (_passwordController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter your password',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (_passwordController.text.length < 6) {
+      Get.snackbar(
+        'Error',
+        'Password must be at least 6 characters long',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (_confirmPasswordController.text != _passwordController.text) {
+      Get.snackbar(
+        'Error',
+        'Passwords do not match',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final AuthController authController = Get.find<AuthController>();
+
+    // Show loading indicator
+    Get.dialog(
+      const Center(
+        child: CircularProgressIndicator(),
+      ),
+      barrierDismissible: false,
+    );
+
+    try {
+      final result = await authController.signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        name: _nameController.text.trim(),
+      );
+
+      // Close loading dialog
+      Get.back();
+
+      if (result.success) {
+        Get.snackbar(
+          'Success',
+          result.message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        Get.offAll(() => const MainScreen());
+      } else {
+        Get.snackbar(
+          'Error',
+          result.message,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      Get.back();
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }

@@ -5,23 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/features/pages/main_screen.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   final AuthController authController = Get.find<AuthController>();
 
   @override
-  Widget build(BuildContext context) {
-    // Navigate based on auth state after 2.5 seconds
-    Future.delayed(const Duration(milliseconds: 2500), () {
-      if (authController.isFirstTime) {
-        Get.off(() => const OnboardingScreen());
-      } else if (authController.isLoggedIn) {
-        Get.off(() => const MainScreen());
-      } else {
-        Get.off(() => SignInScreen());
-      }
-    });
+  void initState() {
+    super.initState();
+    _initializeApp();
+  }
 
+  void _initializeApp() async {
+    // Wait for Firebase auth state to be determined
+    await Future.delayed(const Duration(milliseconds: 2500));
+
+    // Navigate based on auth state
+    if (authController.isFirstTime) {
+      Get.off(() => const OnboardingScreen());
+    } else if (authController.isLoggedIn) {
+      Get.off(() => const MainScreen());
+    } else {
+      Get.off(() => SignInScreen());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
