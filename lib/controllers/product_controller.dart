@@ -29,6 +29,7 @@ class ProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _selectedCategory.value = 'All'; // Initialize with "All" selected
     loadProducts();
   }
 
@@ -95,25 +96,63 @@ class ProductController extends GetxController {
   void filterByCategory(String category) {
     _selectedCategory.value = category;
     _applyFilters();
+    update(); // Notify GetBuilder widgets
   }
 
   // Search products
   void searchProducts(String query) {
     _searchQuery.value = query;
     _applyFilters();
+    update(); // Notify GetBuilder widgets
+  }
+
+  // Reset all filters
+  void resetFilters() {
+    _selectedCategory.value = 'All';
+    _searchQuery.value = '';
+    _filteredProducts.value = _allProducts;
+    update(); // Notify GetBuilder widgets
+  }
+
+  // Clear search
+  void clearSearch() {
+    _searchQuery.value = '';
+    _applyFilters();
+    update(); // Notify GetBuilder widgets
   }
 
   // Apply filters and search
   void _applyFilters() {
-    List<Product> filtered = _allProducts;
+    List<Product> filtered = List.from(_allProducts);
 
     // Apply category filter
-    if (_selectedCategory.value != 'All') {
-      filtered = filtered
-          .where((product) =>
-              product.category.toLowerCase() ==
-              _selectedCategory.value.toLowerCase())
-          .toList();
+    if (_selectedCategory.value != 'All' &&
+        _selectedCategory.value.isNotEmpty) {
+      final selectedCat = _selectedCategory.value.toLowerCase();
+      filtered = filtered.where((product) {
+        final productCat = product.category.toLowerCase();
+
+        // Handle special category mappings
+        if (selectedCat == 'home & living' || selectedCat == 'home') {
+          return productCat == 'home' || productCat == 'home & living';
+        }
+        if (selectedCat == 'sports & fitness' || selectedCat == 'sports') {
+          return productCat == 'sports' || productCat == 'sports & fitness';
+        }
+
+        // Match exact category name or display name
+        return productCat == selectedCat ||
+            productCat.contains(selectedCat) ||
+            selectedCat.contains(productCat);
+      }).toList();
+
+      print('Filtering by category: ${_selectedCategory.value}');
+      print('Found ${filtered.length} products in category');
+      print(
+          'Available categories in products: ${_allProducts.map((p) => p.category).toSet()}');
+    } else {
+      // "All" selected - show all products
+      print('Showing all products: ${_allProducts.length}');
     }
 
     // Apply search filter
@@ -129,6 +168,7 @@ class ProductController extends GetxController {
     }
 
     _filteredProducts.value = filtered;
+    print('Total filtered products: ${_filteredProducts.length}');
   }
 
   // Get products by category
@@ -175,6 +215,11 @@ class ProductController extends GetxController {
 
   // Get products for display (Firestore only, no dummy data)
   List<Product> getDisplayProducts() {
-    return _filteredProducts.isNotEmpty ? _filteredProducts : _allProducts;
+    // If "All" is selected, show all products
+    if (_selectedCategory.value == 'All') {
+      return _allProducts;
+    }
+    // Otherwise, show filtered products (even if empty)
+    return _filteredProducts;
   }
 }

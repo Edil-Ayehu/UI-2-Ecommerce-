@@ -9,7 +9,7 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<ProductController>(
+    return GetBuilder<ProductController>(
       builder: (productController) {
         if (productController.isLoading) {
           return const Center(
@@ -98,7 +98,7 @@ class ProductGrid extends StatelessWidget {
             );
           },
         );
-      }, 
+      },
     );
   }
 }
