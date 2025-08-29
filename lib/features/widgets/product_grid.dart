@@ -98,7 +98,7 @@ class ProductGrid extends StatelessWidget {
             );
           },
         );
-      },
+      }, 
     );
   }
 }

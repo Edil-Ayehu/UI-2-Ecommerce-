@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SizeSelector extends StatefulWidget {
-  const SizeSelector({super.key});
+  final List<String> sizes;
+  final Function(String)? onSizeSelected;
+  final String? initialSize;
+
+  const SizeSelector({
+    super.key,
+    this.sizes = const ['S', 'M', 'L', 'XL', 'XXL'],
+    this.onSizeSelected,
+    this.initialSize,
+  });
 
   @override
   State<SizeSelector> createState() => _SizeSelectorState();
@@ -9,7 +18,18 @@ class SizeSelector extends StatefulWidget {
 
 class _SizeSelectorState extends State<SizeSelector> {
   int _selectedIndex = 0;
-  final List<String> _sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial selected index based on initialSize
+    if (widget.initialSize != null) {
+      final index = widget.sizes.indexOf(widget.initialSize!);
+      if (index != -1) {
+        _selectedIndex = index;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +39,16 @@ class _SizeSelectorState extends State<SizeSelector> {
       height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: _sizes.length,
+        itemCount: widget.sizes.length,
         itemBuilder: (context, index) {
           final isSelected = _selectedIndex == index;
           return GestureDetector(
-            onTap: () => setState(() => _selectedIndex = index),
+            onTap: () {
+              setState(() => _selectedIndex = index);
+              if (widget.onSizeSelected != null) {
+                widget.onSizeSelected!(widget.sizes[index]);
+              }
+            },
             child: Container(
               width: 50,
               margin: const EdgeInsets.only(right: 10),
@@ -42,7 +67,7 @@ class _SizeSelectorState extends State<SizeSelector> {
               ),
               child: Center(
                 child: Text(
-                  _sizes[index],
+                  widget.sizes[index],
                   style: TextStyle(
                     color: isSelected
                         ? Colors.white
