@@ -20,7 +20,7 @@ class Product {
   final int reviewCount;
   final List<String> tags;
   final Map<String, dynamic> specifications;
-  final bool isFavorite;
+
   final String description;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -45,7 +45,6 @@ class Product {
     this.reviewCount = 0,
     this.tags = const [],
     this.specifications = const {},
-    this.isFavorite = false,
     required this.description,
     this.createdAt,
     this.updatedAt,
@@ -73,7 +72,6 @@ class Product {
       reviewCount: data['reviewCount'] ?? 0,
       tags: List<String>.from(data['tags'] ?? []),
       specifications: Map<String, dynamic>.from(data['specifications'] ?? {}),
-      isFavorite: data['isFavorite'] ?? false,
       description: data['description'] ?? '',
       createdAt: data['createdAt']?.toDate(),
       updatedAt: data['updatedAt']?.toDate(),
@@ -167,7 +165,6 @@ final List<Product> products = [
     price: 99.00,
     images: ['assets/images/shoes2.jpg'],
     primaryImage: 'assets/images/shoes2.jpg',
-    isFavorite: true,
     description: 'This is a description of the product 4',
   ),
 ];

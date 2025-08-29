@@ -1,6 +1,8 @@
 import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
+import 'package:ecommerce_ui/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -25,8 +27,8 @@ class ProductCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.1),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -98,17 +100,25 @@ class ProductCard extends StatelessWidget {
               Positioned(
                 right: 8,
                 top: 8,
-                child: IconButton(
-                  icon: Icon(
-                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: product.isFavorite
-                        ? Theme.of(context).primaryColor
-                        : isDark
-                            ? Colors.grey[400]
-                            : Colors.grey,
-                  ),
-                  onPressed: () {
-                    // Implement favorite toggle functionality
+                child: GetBuilder<WishlistController>(
+                  id: 'wishlist_${product.id}',
+                  builder: (wishlistController) {
+                    final isInWishlist =
+                        wishlistController.isProductInWishlist(product.id);
+
+                    return IconButton(
+                      icon: Icon(
+                        isInWishlist ? Icons.favorite : Icons.favorite_border,
+                        color: isInWishlist
+                            ? Theme.of(context).primaryColor
+                            : isDark
+                                ? Colors.grey[400]
+                                : Colors.grey,
+                      ),
+                      onPressed: () {
+                        wishlistController.toggleWishlist(product);
+                      },
+                    );
                   },
                 ),
               ),

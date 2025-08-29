@@ -1,12 +1,21 @@
 import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
+import 'package:ecommerce_ui/controllers/wishlist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:get/get.dart';
 import '../widgets/size_selector.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   final Product product;
   const ProductDetailsScreen({super.key, required this.product});
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  String? selectedSize;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +47,8 @@ class ProductDetailsScreen extends StatelessWidget {
               Icons.share,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: () =>
-                _shareProduct(context, product.name, product.description),
+            onPressed: () => _shareProduct(
+                context, widget.product.name, widget.product.description),
           ),
         ],
       ),
@@ -52,9 +61,9 @@ class ProductDetailsScreen extends StatelessWidget {
                 // image
                 AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: product.imageUrl.startsWith('http')
+                  child: widget.product.imageUrl.startsWith('http')
                       ? Image.network(
-                          product.imageUrl,
+                          widget.product.imageUrl,
                           width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
@@ -83,7 +92,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           },
                         )
                       : Image.asset(
-                          product.imageUrl,
+                          widget.product.imageUrl,
                           width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
@@ -104,16 +113,24 @@ class ProductDetailsScreen extends StatelessWidget {
                 Positioned(
                   right: screenWidth * 0.04,
                   top: screenWidth * 0.04,
-                  child: IconButton(
-                    icon: Icon(
-                      product.isFavorite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: product.isFavorite
-                          ? Theme.of(context).primaryColor
-                          : (isDark ? Colors.white : Colors.black),
-                    ),
-                    onPressed: () {},
+                  child: GetBuilder<WishlistController>(
+                    id: 'wishlist_${widget.product.id}',
+                    builder: (wishlistController) {
+                      final isInWishlist = wishlistController
+                          .isProductInWishlist(widget.product.id);
+
+                      return IconButton(
+                        icon: Icon(
+                          isInWishlist ? Icons.favorite : Icons.favorite_border,
+                          color: isInWishlist
+                              ? Theme.of(context).primaryColor
+                              : (isDark ? Colors.white : Colors.black),
+                        ),
+                        onPressed: () {
+                          wishlistController.toggleWishlist(widget.product);
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
@@ -129,7 +146,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          product.name,
+                          widget.product.name,
                           style: AppTextStyle.withColor(
                             AppTextStyle.h2,
                             Theme.of(context).textTheme.headlineMedium!.color!,
@@ -140,7 +157,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '\$${product.price.toStringAsFixed(2)}',
+                            '\$${widget.product.price.toStringAsFixed(2)}',
                             style: AppTextStyle.withColor(
                               AppTextStyle.h2,
                               Theme.of(context)
@@ -149,10 +166,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                   .color!,
                             ),
                           ),
-                          if (product.oldPrice != null &&
-                              product.oldPrice! > product.price) ...[
+                          if (widget.product.oldPrice != null &&
+                              widget.product.oldPrice! >
+                                  widget.product.price) ...[
                             Text(
-                              '\$${product.oldPrice!.toStringAsFixed(2)}',
+                              '\$${widget.product.oldPrice!.toStringAsFixed(2)}',
                               style: AppTextStyle.withColor(
                                 AppTextStyle.bodySmall,
                                 isDark ? Colors.grey[400]! : Colors.grey[600]!,
@@ -168,7 +186,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '${product.discountPercentage}% OFF',
+                                '${widget.product.discountPercentage}% OFF',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 10,
@@ -184,13 +202,13 @@ class ProductDetailsScreen extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        product.category,
+                        widget.product.category,
                         style: AppTextStyle.withColor(
                           AppTextStyle.bodyMedium,
                           isDark ? Colors.grey[400]! : Colors.grey[600]!,
                         ),
                       ),
-                      if (product.brand != null) ...[
+                      if (widget.product.brand != null) ...[
                         Text(
                           ' • ',
                           style: AppTextStyle.withColor(
@@ -199,7 +217,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          product.brand!,
+                          widget.product.brand!,
                           style: AppTextStyle.withColor(
                             AppTextStyle.bodyMedium,
                             Theme.of(context).primaryColor,
@@ -209,18 +227,18 @@ class ProductDetailsScreen extends StatelessWidget {
                     ],
                   ),
                   // Stock status
-                  if (product.stock <= 5 && product.stock > 0)
+                  if (widget.product.stock <= 5 && widget.product.stock > 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        'Only ${product.stock} left in stock!',
+                        'Only ${widget.product.stock} left in stock!',
                         style: AppTextStyle.withColor(
                           AppTextStyle.bodySmall,
                           Colors.orange,
                         ),
                       ),
                     )
-                  else if (product.stock == 0)
+                  else if (widget.product.stock == 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
@@ -262,7 +280,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   Text(
-                    product.description,
+                    widget.product.description,
                     style: AppTextStyle.withColor(
                       AppTextStyle.bodySmall,
                       isDark ? Colors.grey[400]! : Colors.grey[600]!,
@@ -328,8 +346,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
   // Get available sizes from product specifications
   List<String> _getAvailableSizes() {
-    if (product.specifications.containsKey('sizes')) {
-      final sizes = product.specifications['sizes'];
+    if (widget.product.specifications.containsKey('sizes')) {
+      final sizes = widget.product.specifications['sizes'];
       if (sizes is List) {
         return List<String>.from(sizes);
       }
