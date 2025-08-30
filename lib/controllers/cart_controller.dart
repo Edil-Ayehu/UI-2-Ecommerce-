@@ -25,7 +25,7 @@ class CartController extends GetxController {
   List<CartItem> get cartItems => _cartItems;
   bool get isLoading => _isLoading.value;
   bool get hasError => _hasError.value;
-  String get errorMessage => _errorMessage.value; 
+  String get errorMessage => _errorMessage.value;
   int get itemCount => _itemCount.value;
   double get subtotal => _subtotal.value;
   double get savings => _savings.value;
@@ -43,7 +43,7 @@ class CartController extends GetxController {
   // Listen to authentication changes
   void _listenToAuthChanges() {
     final authController = Get.find<AuthController>();
-    
+
     // Listen to auth state changes
     ever(authController.isLoggedIn.obs, (bool isLoggedIn) {
       if (isLoggedIn) {
@@ -120,6 +120,7 @@ class CartController extends GetxController {
     String? selectedSize,
     String? selectedColor,
     Map<String, dynamic>? customizations,
+    bool showNotification = true,
   }) async {
     try {
       final userId = _userId;
@@ -156,19 +157,23 @@ class CartController extends GetxController {
       if (success) {
         await loadCartItems(); // Refresh cart
         update(); // Notify UI
-        Get.snackbar(
-          'Added to Cart',
-          '${product.name} added to your cart',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-        );
+        if (showNotification) {
+          Get.snackbar(
+            'Added to Cart',
+            '${product.name} added to your cart',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 2),
+          );
+        }
       } else {
-        Get.snackbar(
-          'Error',
-          'Failed to add item to cart',
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 2),
-        );
+        if (showNotification) {
+          Get.snackbar(
+            'Error',
+            'Failed to add item to cart',
+            snackPosition: SnackPosition.BOTTOM,
+            duration: const Duration(seconds: 2),
+          );
+        }
       }
 
       return success;
@@ -200,7 +205,7 @@ class CartController extends GetxController {
 
       // Find the cart item to check stock
       final cartItem = _cartItems.firstWhere((item) => item.id == cartItemId);
-      
+
       if (newQuantity > cartItem.product.stock) {
         Get.snackbar(
           'Insufficient Stock',
@@ -211,13 +216,14 @@ class CartController extends GetxController {
         return false;
       }
 
-      final success = await CartFirestoreService.updateCartItemQuantity(cartItemId, newQuantity);
-      
+      final success = await CartFirestoreService.updateCartItemQuantity(
+          cartItemId, newQuantity);
+
       if (success) {
         await loadCartItems(); // Refresh cart
         update(); // Notify UI
       }
-      
+
       return success;
     } catch (e) {
       print('Error updating cart quantity: $e');
@@ -229,7 +235,7 @@ class CartController extends GetxController {
   Future<bool> removeFromCart(String cartItemId) async {
     try {
       final success = await CartFirestoreService.removeCartItem(cartItemId);
-      
+
       if (success) {
         await loadCartItems(); // Refresh cart
         update(); // Notify UI
@@ -240,7 +246,7 @@ class CartController extends GetxController {
           duration: const Duration(seconds: 2),
         );
       }
-      
+
       return success;
     } catch (e) {
       print('Error removing from cart: $e');
@@ -263,7 +269,7 @@ class CartController extends GetxController {
       }
 
       final success = await CartFirestoreService.clearUserCart(userId);
-      
+
       if (success) {
         _cartItems.clear();
         _itemCount.value = 0;
@@ -276,7 +282,7 @@ class CartController extends GetxController {
           duration: const Duration(seconds: 2),
         );
       }
-      
+
       return success;
     } catch (e) {
       print('Error clearing cart: $e');
@@ -286,19 +292,17 @@ class CartController extends GetxController {
 
   // Check if product is in cart
   bool isProductInCart(String productId, {String? selectedSize}) {
-    return _cartItems.any((item) => 
-      item.productId == productId && 
-      (selectedSize == null || item.selectedSize == selectedSize)
-    );
+    return _cartItems.any((item) =>
+        item.productId == productId &&
+        (selectedSize == null || item.selectedSize == selectedSize));
   }
 
   // Get cart item for product
   CartItem? getCartItem(String productId, {String? selectedSize}) {
     try {
-      return _cartItems.firstWhere((item) => 
-        item.productId == productId && 
-        (selectedSize == null || item.selectedSize == selectedSize)
-      );
+      return _cartItems.firstWhere((item) =>
+          item.productId == productId &&
+          (selectedSize == null || item.selectedSize == selectedSize));
     } catch (e) {
       return null;
     }
