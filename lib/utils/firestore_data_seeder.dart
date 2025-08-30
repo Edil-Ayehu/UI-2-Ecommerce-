@@ -5,8 +5,8 @@ class FirestoreDataSeeder {
 
   // Seed all data
   static Future<void> seedAllData() async {
-    await seedCategories();
     await seedProducts();
+    await seedCategories();
   }
 
   // Add sample categories to Firestore
@@ -140,9 +140,12 @@ class FirestoreDataSeeder {
         'price': 129.99,
         'oldPrice': 179.99,
         'currency': 'USD',
-        'images': ['assets/images/shoe.jpg'],
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpnHmorysRSZDBWnzVo5jLfKV4RqHmd6rvng&s',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxY2tiV09tdOiSP9kAak6m4RqCR_U2gptIhQ&s'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt6iUchu-11e_L2o9aZ76zGGlxPcbBH23X8_Fcoli7k9lsn8SuTfg8lGmPlZ239a5uF3s&usqp=CAU',
         'brand': 'Nike',
         'sku': 'NIKE-AM270-001',
         'stock': 25,
@@ -181,9 +184,12 @@ class FirestoreDataSeeder {
         'price': 1299.99,
         'oldPrice': 1499.99,
         'currency': 'USD',
-        'images': ['assets/images/laptop.jpg'],
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXsU8yOX6zeR_Mq8vTVL90KU6Fryj_VEEhYyOho5nFryl-zldj6Fm20ZvvXbII8IhdKQY&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt68OlDYzbSg-hn_rZMvJu3Zsf8sM5J6w0i2Bb-Z6dmCSWLb_ETNLN1GxjQ9mBTtBaS7k&usqp=CAU'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://techcrunch.com/wp-content/uploads/2020/05/00100trPORTRAIT_00100_BURST20200506153653558_COVER.jpg',
         'brand': 'Apple',
         'sku': 'APPLE-MBP13-001',
         'stock': 15,
@@ -220,9 +226,12 @@ class FirestoreDataSeeder {
         'subcategory': 'Basketball Shoes',
         'price': 170.00,
         'currency': 'USD',
-        'images': ['assets/images/shoe2.jpg'],
+        'images': [
+          'https://static.ftshp.digital/img/p/1/3/9/9/6/3/6/1399636-full_product.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZXSwSg15jP36lnxKLqQ86BOpOA3TOl4KwN5z-JkJvka0xeyNzgO94oXYa2O5iKFvnaac&usqp=CAU'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMls5XcxKp5mn5W5j_euxK3p_CJe39xXD6Tw&s',
         'brand': 'Jordan',
         'sku': 'JORDAN-AJ1-001',
         'stock': 30,
@@ -258,9 +267,12 @@ class FirestoreDataSeeder {
         'subcategory': 'Lifestyle Shoes',
         'price': 110.00,
         'currency': 'USD',
-        'images': ['assets/images/shoes2.jpg'],
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRKvPgVz9zuWTVfRyS3fySHILl9db8bjTMsA&s',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoSLTa0cE1YuiCib2IEFUWVF63ZVskEUFf4w&s'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmu3U0IX1Wif_smZZdVs0SGAhodvDFPAF79g&s',
         'brand': 'Puma',
         'sku': 'PUMA-RSX-001',
         'stock': 40,
@@ -295,9 +307,12 @@ class FirestoreDataSeeder {
         'subcategory': 'Smartphones',
         'price': 999.99,
         'currency': 'USD',
-        'images': ['assets/images/phone.jpg'],
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLykA4073n2UFAgLP0G9WoRhR54C0Nf2dm-su3GcASw7Qz8bq37cX5kNfg97oG9MDKI60&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCGn0N5jOZHd4F6atw6IDvrWTMmitxfPjNgA&s'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbUvMRzaNJcahY1xUz-e8yvvrbQcsoYLFuTw&s',
         'brand': 'Apple',
         'sku': 'APPLE-IP15P-001',
         'stock': 20,
@@ -335,9 +350,12 @@ class FirestoreDataSeeder {
         'price': 249.99,
         'oldPrice': 299.99,
         'currency': 'USD',
-        'images': ['assets/images/watch.jpg'],
+        'images': [
+          'https://m.media-amazon.com/images/I/71SZNup1qrL._UF894,1000_QL80_.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSomqN-QSvm7vA223a62AfOCxc5Ynu0TaIGoNNi0BhSrq2CjUgWPiQB4Uz8-UUouwStun4&usqp=CAU'
+        ],
         'primaryImage':
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzSOrIHIncvVwcn86Yj1lG2no3rymRPhF1AQ&s',
+            'https://m.media-amazon.com/images/I/71ajpQVSv+L._UF894,1000_QL80_.jpg',
         'brand': 'Samsung',
         'sku': 'SAMSUNG-GW-001',
         'stock': 35,
@@ -375,8 +393,12 @@ class FirestoreDataSeeder {
         'price': 29.99,
         'oldPrice': 39.99,
         'currency': 'USD',
-        'images': ['assets/images/tshirt.jpg'],
-        'primaryImage': 'assets/images/tshirt.jpg',
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNyrA0nJsq6eF3Y4e0iodxRXl1j-S7jOO6bA&s',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxgx3ypP_e1yMR1Q933G4tG4_uqoq9ykqRUg&s',
+        ],
+        'primaryImage':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5dabyiV2uLVOuvcmgoqjdohkpK1KVZhqOqw&s',
         'brand': 'Nike',
         'sku': 'NIKE-TSHIRT-001',
         'stock': 50,
@@ -413,8 +435,12 @@ class FirestoreDataSeeder {
         'price': 199.99,
         'oldPrice': 249.99,
         'currency': 'USD',
-        'images': ['assets/images/headphones.jpg'],
-        'primaryImage': 'assets/images/headphones.jpg',
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXpXRzW83eZKLKziTv7T-Bv6ewxwdEcGSMh_J7NSH3mNydRY0CgpNguDODeRjkpeFJLCk&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_PMYOAavmiNDnfCcf9b6a6OS-rfbnPxRc6w&s',
+        ],
+        'primaryImage':
+            'https://m.media-amazon.com/images/I/41JACWT-wWL._UF1000,1000_QL80_.jpg',
         'brand': 'Sony',
         'sku': 'SONY-WH-001',
         'stock': 30,
@@ -450,8 +476,12 @@ class FirestoreDataSeeder {
         'subcategory': 'Bags',
         'price': 149.99,
         'currency': 'USD',
-        'images': ['assets/images/handbag.jpg'],
-        'primaryImage': 'assets/images/handbag.jpg',
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbRJSEKDOWXYISNWgkvoKxwHAVs5vYtQAL6Qz9fpzfByZnaSwUdgUEsI_o4RtaVe52380&usqp=CAU',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlmWkRyL_HIbd-4UMmvUzmAVnrLCi-69vxNGXBEwM9rICQ1qZFVg0K7WjNQOsLkfcj8p0&usqp=CAU'
+        ],
+        'primaryImage':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_hbkRcYsQQC0_L--z4lK9WxSRWP8dZECA1g&s',
         'brand': 'Coach',
         'sku': 'COACH-BAG-001',
         'stock': 15,
@@ -488,8 +518,12 @@ class FirestoreDataSeeder {
         'price': 39.99,
         'oldPrice': 59.99,
         'currency': 'USD',
-        'images': ['assets/images/yoga_mat.jpg'],
-        'primaryImage': 'assets/images/yoga_mat.jpg',
+        'images': [
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLHECoa3WE2V8uX8rIfmV-Zu2YxyqsMtLYgA&s',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWLbBEoG7tTlUp96hQakV4GPtGIqugBlhc4w&s'
+        ],
+        'primaryImage':
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShe19dG4JJgzXrRsJWC45Rbn2Q-J0S_3WK4w&s',
         'brand': 'Manduka',
         'sku': 'MANDUKA-MAT-001',
         'stock': 25,

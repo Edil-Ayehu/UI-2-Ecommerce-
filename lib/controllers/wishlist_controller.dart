@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:ecommerce_ui/model/wishlist_item.dart';
 import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/services/wishlist_firestore_service.dart';
+import 'package:ecommerce_ui/controllers/auth_controller.dart';
 
 class WishlistController extends GetxController {
   final RxList<WishlistItem> _wishlistItems = <WishlistItem>[].obs;
@@ -10,8 +11,11 @@ class WishlistController extends GetxController {
   final RxString _errorMessage = ''.obs;
   final RxInt _itemCount = 0.obs;
 
-  // Mock user ID - In a real app, this would come from authentication
-  final String _userId = 'user_123';
+  // Get authenticated user ID
+  String? get _userId {
+    final authController = Get.find<AuthController>();
+    return authController.user?.uid;
+  }
 
   // Getters
   List<WishlistItem> get wishlistItems => _wishlistItems;
@@ -25,6 +29,25 @@ class WishlistController extends GetxController {
   void onInit() {
     super.onInit();
     loadWishlistItems();
+    _listenToAuthChanges();
+  }
+
+  // Listen to authentication changes
+  void _listenToAuthChanges() {
+    final authController = Get.find<AuthController>();
+
+    // Listen to auth state changes
+    ever(authController.isLoggedIn.obs, (bool isLoggedIn) {
+      if (isLoggedIn) {
+        // User signed in, load their wishlist
+        loadWishlistItems();
+      } else {
+        // User signed out, clear wishlist
+        _wishlistItems.clear();
+        _itemCount.value = 0;
+        update();
+      }
+    });
   }
 
   // Load wishlist items from Firestore
@@ -33,8 +56,16 @@ class WishlistController extends GetxController {
     _hasError.value = false;
 
     try {
-      final items =
-          await WishlistFirestoreService.getUserWishlistItems(_userId);
+      final userId = _userId;
+      if (userId == null) {
+        _wishlistItems.clear();
+        _itemCount.value = 0;
+        _hasError.value = true;
+        _errorMessage.value = 'Please sign in to view your wishlist.';
+        return;
+      }
+
+      final items = await WishlistFirestoreService.getUserWishlistItems(userId);
       _wishlistItems.value = items;
       _itemCount.value = items.length;
       update(); // Notify UI
@@ -50,8 +81,19 @@ class WishlistController extends GetxController {
   // Add product to wishlist
   Future<bool> addToWishlist(Product product) async {
     try {
+      final userId = _userId;
+      if (userId == null) {
+        Get.snackbar(
+          'Authentication Required',
+          'Please sign in to add items to your wishlist',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        return false;
+      }
+
       final success = await WishlistFirestoreService.addToWishlist(
-        userId: _userId,
+        userId: userId,
         product: product,
       );
 
@@ -89,8 +131,19 @@ class WishlistController extends GetxController {
   // Remove product from wishlist
   Future<bool> removeFromWishlist(String productId) async {
     try {
+      final userId = _userId;
+      if (userId == null) {
+        Get.snackbar(
+          'Authentication Required',
+          'Please sign in to manage your wishlist',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        return false;
+      }
+
       final success =
-          await WishlistFirestoreService.removeFromWishlist(_userId, productId);
+          await WishlistFirestoreService.removeFromWishlist(userId, productId);
 
       if (success) {
         await loadWishlistItems(); // Refresh wishlist
@@ -113,6 +166,17 @@ class WishlistController extends GetxController {
   // Toggle product in wishlist
   Future<bool> toggleWishlist(Product product) async {
     try {
+      final userId = _userId;
+      if (userId == null) {
+        Get.snackbar(
+          'Authentication Required',
+          'Please sign in to manage your wishlist',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        return false;
+      }
+
       final isInWishlist = isProductInWishlist(product.id);
 
       // Update UI immediately for better user experience
@@ -133,7 +197,7 @@ class WishlistController extends GetxController {
         // Optimistically add to local list (create temporary item)
         final tempItem = WishlistItem(
           id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
-          userId: _userId,
+          userId: userId,
           productId: product.id,
           product: product,
           addedAt: DateTime.now(),
@@ -175,7 +239,18 @@ class WishlistController extends GetxController {
   // Clear entire wishlist
   Future<bool> clearWishlist() async {
     try {
-      final success = await WishlistFirestoreService.clearUserWishlist(_userId);
+      final userId = _userId;
+      if (userId == null) {
+        Get.snackbar(
+          'Authentication Required',
+          'Please sign in to manage your wishlist',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+        return false;
+      }
+
+      final success = await WishlistFirestoreService.clearUserWishlist(userId);
 
       if (success) {
         _wishlistItems.clear();
