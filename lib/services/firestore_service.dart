@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirestoreService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -82,6 +83,29 @@ class FirestoreService {
     String? profileImageUrl,
   }) async {
     try {
+      // Check if user document exists first
+      final docExists = await userDocumentExists(uid);
+
+      if (!docExists) {
+        // Create user document if it doesn't exist
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final createSuccess = await createUserDocument(
+            uid: uid,
+            email: user.email ?? '',
+            name: name ?? user.displayName ?? 'User',
+          );
+
+          if (!createSuccess) {
+            print('Failed to create user document');
+            return false;
+          }
+        } else {
+          print('No authenticated user found');
+          return false;
+        }
+      }
+
       final Map<String, dynamic> updateData = {
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -93,10 +117,15 @@ class FirestoreService {
       if (phoneNumber != null) updateData['phoneNumber'] = phoneNumber;
       if (dateOfBirth != null) updateData['dateOfBirth'] = dateOfBirth;
       if (gender != null) updateData['gender'] = gender;
-      if (profileImageUrl != null)
+      if (profileImageUrl != null) {
         updateData['profileImageUrl'] = profileImageUrl;
+      }
 
-      await _firestore.collection(_usersCollection).doc(uid).update(updateData);
+      // Use set with merge to handle both create and update scenarios
+      await _firestore.collection(_usersCollection).doc(uid).set(
+            updateData,
+            SetOptions(merge: true),
+          );
 
       return true;
     } catch (e) {
