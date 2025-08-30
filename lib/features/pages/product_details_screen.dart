@@ -19,6 +19,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String? selectedSize;
 
   @override
+  void initState() {
+    super.initState();
+    // Initialize with first available size if product has sizes
+    final availableSizes = _getAvailableSizes();
+    if (availableSizes.isNotEmpty) {
+      selectedSize = availableSizes.first;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final screenHeight = screenSize.height;
@@ -264,9 +274,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     // size selector with product sizes
                     SizeSelector(
                       sizes: _getAvailableSizes(),
+                      initialSize: selectedSize,
                       onSizeSelected: (size) {
-                        // Handle size selection
-                        // You can add size selection logic here
+                        setState(() {
+                          selectedSize = size;
+                        });
                       },
                     ),
                     SizedBox(height: screenHeight * 0.02),
