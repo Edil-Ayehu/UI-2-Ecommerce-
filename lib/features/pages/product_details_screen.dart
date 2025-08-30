@@ -1,6 +1,7 @@
 import 'package:ecommerce_ui/model/product.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/controllers/wishlist_controller.dart';
+import 'package:ecommerce_ui/controllers/cart_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:get/get.dart';
@@ -299,23 +300,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                      vertical: screenHeight * 0.02,
-                    ),
-                    side: BorderSide(
-                      color: isDark ? Colors.white70 : Colors.black12,
-                    ),
-                  ),
-                  child: Text(
-                    'Add To Cart',
-                    style: AppTextStyle.withColor(
-                      AppTextStyle.buttonMedium,
-                      Theme.of(context).textTheme.bodyLarge!.color!,
-                    ),
-                  ),
+                child: GetBuilder<CartController>(
+                  builder: (cartController) {
+                    final isInCart = cartController.isProductInCart(
+                      widget.product.id,
+                      selectedSize: selectedSize,
+                    );
+
+                    return OutlinedButton(
+                      onPressed: widget.product.stock > 0
+                          ? () => _addToCart(cartController)
+                          : null,
+                      style: OutlinedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * 0.02,
+                        ),
+                        side: BorderSide(
+                          color: widget.product.stock > 0
+                              ? (isDark ? Colors.white70 : Colors.black12)
+                              : Colors.grey,
+                        ),
+                      ),
+                      child: Text(
+                        widget.product.stock > 0
+                            ? (isInCart ? 'Update Cart' : 'Add To Cart')
+                            : 'Out of Stock',
+                        style: AppTextStyle.withColor(
+                          AppTextStyle.buttonMedium,
+                          widget.product.stock > 0
+                              ? Theme.of(context).textTheme.bodyLarge!.color!
+                              : Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(width: screenWidth * 0.04),
@@ -354,6 +372,30 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     }
     // Return empty list if no sizes specified (will hide size selector)
     return [];
+  }
+
+  // Add product to cart
+  Future<void> _addToCart(CartController cartController) async {
+    // Check if size selection is required
+    final availableSizes = _getAvailableSizes();
+    if (availableSizes.isNotEmpty && selectedSize == null) {
+      Get.snackbar(
+        'Size Required',
+        'Please select a size before adding to cart',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Add to cart with selected options
+    await cartController.addToCart(
+      product: widget.product,
+      quantity: 1,
+      selectedSize: selectedSize,
+    );
   }
 
   Future<void> _shareProduct(
