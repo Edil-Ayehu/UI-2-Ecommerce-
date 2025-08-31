@@ -3,10 +3,12 @@ import 'package:ecommerce_ui/features/widgets/category_chips.dart';
 import 'package:ecommerce_ui/features/widgets/product_grid.dart';
 import 'package:ecommerce_ui/features/widgets/filter_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ecommerce_ui/features/pages/search_results_screen.dart';
 
 class ShoppingScreen extends StatelessWidget {
   const ShoppingScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -27,7 +29,9 @@ class ShoppingScreen extends StatelessWidget {
               Icons.search,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => const SearchResultsScreen(searchQuery: ''));
+            },
           ),
           IconButton(
             icon: Icon(

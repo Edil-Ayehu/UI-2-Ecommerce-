@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:ecommerce_ui/features/widgets/filter_bottom_sheet.dart';
+import 'package:ecommerce_ui/features/pages/search_results_screen.dart';
 
 class AllProductsScreen extends StatelessWidget {
   const AllProductsScreen({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,9 @@ class AllProductsScreen extends StatelessWidget {
               Icons.search,
               color: isDark ? Colors.white : Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(() => const SearchResultsScreen(searchQuery: ''));
+            },
           ),
           // Filter icon
           IconButton(

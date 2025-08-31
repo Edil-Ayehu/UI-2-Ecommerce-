@@ -215,11 +215,17 @@ class ProductController extends GetxController {
 
   // Get products for display (Firestore only, no dummy data)
   List<Product> getDisplayProducts() {
-    // If "All" is selected, show all products
+    // If there's an active search query, always show filtered results
+    if (_searchQuery.value.isNotEmpty) {
+      return _filteredProducts;
+    }
+
+    // If "All" category is selected and no search, show all products
     if (_selectedCategory.value == 'All') {
       return _allProducts;
     }
-    // Otherwise, show filtered products (even if empty)
+
+    // Otherwise, show filtered products (category filtered)
     return _filteredProducts;
   }
 }
