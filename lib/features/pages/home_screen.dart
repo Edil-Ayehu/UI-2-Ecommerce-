@@ -31,6 +31,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   Expanded(
+                    flex: 2,
                     child: GetX<AuthController>(
                       builder: (authController) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
