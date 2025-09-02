@@ -1,15 +1,18 @@
+import 'package:ecommerce_ui/controllers/address_controller.dart';
 import 'package:ecommerce_ui/features/shipping%20address/models/address.dart';
-import 'package:ecommerce_ui/features/shipping%20address/repositories/address_repository.dart';
-import 'package:ecommerce_ui/features/shipping%20address/widgets/address_card.dart';
+import 'package:ecommerce_ui/utils/app_textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ecommerce_ui/utils/app_textstyles.dart';
 
+class ShippingAddressScreen extends StatefulWidget {
+  const ShippingAddressScreen({super.key});
 
-class ShippingAddressScreen extends StatelessWidget {
-  final AddressRepository _repository = AddressRepository();
+  @override
+  State<ShippingAddressScreen> createState() => _ShippingAddressScreenState();
+}
 
-  ShippingAddressScreen({super.key});
+class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
+  final _controller = Get.find<AddressController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,112 +45,299 @@ class ShippingAddressScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: _repository.getAddresses().length,
-        itemBuilder: (context, index) => _buildAddressCard(context, index),
+      body: GetBuilder<AddressController>(
+        builder: (controller) {
+          if (controller.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (controller.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Error: ${controller.errorMessage}',
+                    style: AppTextStyle.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => controller.loadAddresses(),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (controller.addresses.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No addresses found',
+                    style: AppTextStyle.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => _showAddAddressBottomSheet(context),
+                    child: const Text('Add Address'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.addresses.length,
+            itemBuilder: (context, index) => _buildAddressCard(context, index),
+          );
+        },
       ),
     );
   }
 
-Widget _buildAddressCard(BuildContext context, int index) {
-  final address = _repository.getAddresses()[index];
-  return AddressCard(
-    address: address,
-    onEdit: () => _showEditAddressBottomSheet(context, address),
-    onDelete: () => _showDeleteConfirmation(context),
-  );
-}
-
-  void _showAddAddressBottomSheet(BuildContext context) {
+  Widget _buildAddressCard(BuildContext context, int index) {
+    final address = _controller.addresses[index];
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.2)
+                : Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Add New Address',
-                  style: AppTextStyle.withColor(
-                    AppTextStyle.h3,
-                    Theme.of(context).textTheme.bodyLarge!.color!,
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: isDark ? Colors.white : Colors.black,
+                  child: Icon(
+                    Icons.location_on,
+                    color: Theme.of(context).primaryColor,
                   ),
-                  onPressed: () => Get.back(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            _buildTextField(
-                context, 'Label (e.g., Home, Office)', Icons.label_outline),
-            const SizedBox(height: 16),
-            _buildTextField(
-                context, 'Full Address', Icons.location_on_outlined),
-            const SizedBox(height: 16),
-            _buildTextField(context, 'City', Icons.location_city_outlined),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTextField(context, 'State', Icons.map_outlined),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child:
-                      _buildTextField(context, 'ZIP Code', Icons.pin_outlined),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            address.label,
+                            style: AppTextStyle.withColor(
+                              AppTextStyle.h3,
+                              Theme.of(context).textTheme.bodyLarge!.color!,
+                            ),
+                          ),
+                          if (address.isDefault) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Default',
+                                style: AppTextStyle.withColor(
+                                  AppTextStyle.bodySmall,
+                                  Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${address.fullAddress}\n${address.city}, ${address.state} ${address.zipCode}',
+                        style: AppTextStyle.withColor(
+                          AppTextStyle.bodyMedium,
+                          isDark ? Colors.grey[400]! : Colors.grey[600]!,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle save address
-                  Get.back();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  'Save Address',
-                  style: AppTextStyle.withColor(
-                    AppTextStyle.buttonMedium,
-                    Colors.white,
-                  ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: isDark ? Colors.grey[800]! : Colors.grey[200]!,
+                  width: 1,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-          ],
-        ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () =>
+                        _showEditAddressBottomSheet(context, address),
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text('Edit'),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 24,
+                  color: isDark ? Colors.grey[800] : Colors.grey[200],
+                ),
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () =>
+                        _showDeleteConfirmation(context, address.id),
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    label: const Text('Delete'),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      foregroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+                if (!address.isDefault) ...[
+                  Container(
+                    width: 1,
+                    height: 24,
+                    color: isDark ? Colors.grey[800] : Colors.grey[200],
+                  ),
+                  Expanded(
+                    child: TextButton.icon(
+                      onPressed: () async {
+                        final success =
+                            await _controller.setDefaultAddress(address.id);
+                        if (success) {
+                          Get.snackbar('Success', 'Default address updated');
+                        } else {
+                          Get.snackbar(
+                              'Error', 'Failed to update default address');
+                        }
+                      },
+                      icon: const Icon(Icons.check_circle_outline, size: 18),
+                      label: const Text('Set Default'),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        foregroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
-      isScrollControlled: true,
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String addressId) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    Get.dialog(
+      AlertDialog(
+        title: Text(
+          'Delete Address',
+          style: AppTextStyle.withColor(
+            AppTextStyle.h3,
+            Theme.of(context).textTheme.bodyLarge!.color!,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to delete this address?',
+          style: AppTextStyle.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Cancel',
+              style: AppTextStyle.withColor(
+                AppTextStyle.buttonMedium,
+                isDark ? Colors.white70 : Colors.black54,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _controller.deleteAddress(addressId).then((success) {
+                Get.back(); // Close dialog
+
+                if (success) {
+                  Get.snackbar('Success', 'Address deleted successfully');
+                } else {
+                  Get.snackbar('Error', 'Failed to delete address');
+                }
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Delete',
+              style: AppTextStyle.withColor(
+                AppTextStyle.buttonMedium,
+                Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   void _showEditAddressBottomSheet(BuildContext context, Address address) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // Text controllers for form fields
+    final labelController = TextEditingController(text: address.label);
+    final fullAddressController =
+        TextEditingController(text: address.fullAddress);
+    final cityController = TextEditingController(text: address.city);
+    final stateController = TextEditingController(text: address.state);
+    final zipCodeController = TextEditingController(text: address.zipCode);
+
+    // Address type selection
+    final selectedType = address.type.obs;
+
+    // Set as default checkbox
+    final isDefault = address.isDefault.obs;
+
     Get.bottomSheet(
       Container(
         padding: const EdgeInsets.all(24),
@@ -155,214 +345,468 @@ Widget _buildAddressCard(BuildContext context, int index) {
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Edit Address',
-                  style: AppTextStyle.withColor(
-                    AppTextStyle.h3,
-                    Theme.of(context).textTheme.bodyLarge!.color!,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Edit Address',
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.h3,
+                      Theme.of(context).textTheme.bodyLarge!.color!,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    color: isDark ? Colors.white : Colors.black,
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                    onPressed: () => Get.back(),
                   ),
-                  onPressed: () => Get.back(),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            _buildTextField(
-                context, 'Label (e.g., Home, Office)', Icons.label_outline,
-                initialValue: address.label),
-            const SizedBox(height: 16),
-            _buildTextField(context, 'Full Address', Icons.location_on_outlined,
-                initialValue: address.fullAddress),
-            const SizedBox(height: 16),
-            _buildTextField(context, 'City', Icons.location_city_outlined,
-                initialValue: address.city),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildTextField(context, 'State', Icons.map_outlined,
-                      initialValue: address.state),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildTextField(
-                      context, 'ZIP Code', Icons.pin_outlined,
-                      initialValue: address.zipCode),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle update address
-                  Get.back();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
+                ],
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: labelController,
+                decoration: InputDecoration(
+                  labelText: 'Label (e.g., Home, Office)',
+                  prefixIcon: const Icon(Icons.label_outline),
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text(
-                  'Update Address',
-                  style: AppTextStyle.withColor(
-                    AppTextStyle.buttonMedium,
-                    Colors.white,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Address Type',
+                style: AppTextStyle.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              Obx(() => Row(
+                    children: [
+                      _buildAddressTypeChip(
+                          context,
+                          'Home',
+                          AddressType.home,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.home),
+                      const SizedBox(width: 8),
+                      _buildAddressTypeChip(
+                          context,
+                          'Office',
+                          AddressType.office,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.office),
+                      const SizedBox(width: 8),
+                      _buildAddressTypeChip(
+                          context,
+                          'Other',
+                          AddressType.other,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.other),
+                    ],
+                  )),
+              const SizedBox(height: 16),
+              Obx(() => CheckboxListTile(
+                    title: Text('Set as default address',
+                        style: AppTextStyle.bodyMedium),
+                    value: isDefault.value,
+                    onChanged: (value) => isDefault.value = value ?? false,
+                    controlAffinity: ListTileControlAffinity.leading,
+                  )),
+              const SizedBox(height: 16),
+              TextField(
+                controller: fullAddressController,
+                decoration: InputDecoration(
+                  labelText: 'Full Address',
+                  prefixIcon: const Icon(Icons.location_on_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 16),
+              TextField(
+                controller: cityController,
+                decoration: InputDecoration(
+                  labelText: 'City',
+                  prefixIcon: const Icon(Icons.location_city_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: stateController,
+                      decoration: InputDecoration(
+                        labelText: 'State',
+                        prefixIcon: const Icon(Icons.map_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: zipCodeController,
+                      decoration: InputDecoration(
+                        labelText: 'ZIP Code',
+                        prefixIcon: const Icon(Icons.pin_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: () {
+                  // Create loading state outside onPressed
+                  final isLoading = RxBool(false);
+
+                  return ElevatedButton(
+                    onPressed: () {
+                      // Validate inputs
+                      if (labelController.text.isEmpty ||
+                          fullAddressController.text.isEmpty ||
+                          cityController.text.isEmpty ||
+                          stateController.text.isEmpty ||
+                          zipCodeController.text.isEmpty) {
+                        Get.snackbar('Error', 'Please fill all fields');
+                        return;
+                      }
+
+                      // Create updated address
+                      final updatedAddress = Address(
+                        id: address.id,
+                        label: labelController.text,
+                        fullAddress: fullAddressController.text,
+                        city: cityController.text,
+                        state: stateController.text,
+                        zipCode: zipCodeController.text,
+                        isDefault: isDefault.value,
+                        type: selectedType.value,
+                      );
+
+                      // Set loading to true
+                      isLoading.value = true;
+
+                      // Update address
+                      _controller.updateAddress(updatedAddress).then((success) {
+                        // Set loading to false
+                        isLoading.value = false;
+
+                        if (success) {
+                          Get.back(); // Close bottom sheet
+                          Get.snackbar(
+                              'Success', 'Address updated successfully');
+                        } else {
+                          Get.snackbar('Error', 'Failed to update address');
+                        }
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Obx(
+                      () => isLoading.value
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Update Address',
+                              style: AppTextStyle.withColor(
+                                AppTextStyle.buttonMedium,
+                                Colors.white,
+                              ),
+                            ),
+                    ),
+                  );
+                }(),
+              ),
+            ],
+          ),
         ),
       ),
       isScrollControlled: true,
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
+  void _showAddAddressBottomSheet(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    Get.dialog(
-      AlertDialog(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+    // Text controllers for form fields
+    final labelController = TextEditingController();
+    final fullAddressController = TextEditingController();
+    final cityController = TextEditingController();
+    final stateController = TextEditingController();
+    final zipCodeController = TextEditingController();
+
+    // Address type selection
+    final selectedType = AddressType.home.obs;
+
+    // Set as default checkbox
+    final isDefault = (_controller.addresses.isEmpty).obs;
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        contentPadding: const EdgeInsets.all(24),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.delete_outline,
-                color: Colors.red,
-                size: 32,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Delete Address',
-              style: AppTextStyle.withColor(
-                AppTextStyle.h3,
-                Theme.of(context).textTheme.bodyLarge!.color!,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Are you sure you want to delete this address?',
-              textAlign: TextAlign.center,
-              style: AppTextStyle.withColor(
-                AppTextStyle.bodyMedium,
-                isDark ? Colors.grey[400]! : Colors.grey[600]!,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Get.back(),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      side: BorderSide(
-                        color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Add New Address',
+                    style: AppTextStyle.withColor(
+                      AppTextStyle.h3,
+                      Theme.of(context).textTheme.bodyLarge!.color!,
                     ),
-                    child: Text(
-                      'Cancel',
-                      style: AppTextStyle.withColor(
-                        AppTextStyle.buttonMedium,
-                        Theme.of(context).textTheme.bodyLarge!.color!,
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: labelController,
+                decoration: InputDecoration(
+                  labelText: 'Label (e.g., Home, Office)',
+                  prefixIcon: const Icon(Icons.label_outline),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Address Type',
+                style: AppTextStyle.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              Obx(() => Row(
+                    children: [
+                      _buildAddressTypeChip(
+                          context,
+                          'Home',
+                          AddressType.home,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.home),
+                      const SizedBox(width: 8),
+                      _buildAddressTypeChip(
+                          context,
+                          'Office',
+                          AddressType.office,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.office),
+                      const SizedBox(width: 8),
+                      _buildAddressTypeChip(
+                          context,
+                          'Other',
+                          AddressType.other,
+                          selectedType.value,
+                          () => selectedType.value = AddressType.other),
+                    ],
+                  )),
+              const SizedBox(height: 16),
+              Obx(() => CheckboxListTile(
+                    title: Text('Set as default address',
+                        style: AppTextStyle.bodyMedium),
+                    value: isDefault.value,
+                    onChanged: (value) => isDefault.value = value ?? false,
+                    controlAffinity: ListTileControlAffinity.leading,
+                  )),
+              const SizedBox(height: 16),
+              TextField(
+                controller: fullAddressController,
+                decoration: InputDecoration(
+                  labelText: 'Full Address',
+                  prefixIcon: const Icon(Icons.location_on_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: cityController,
+                decoration: InputDecoration(
+                  labelText: 'City',
+                  prefixIcon: const Icon(Icons.location_city_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: stateController,
+                      decoration: InputDecoration(
+                        labelText: 'State',
+                        prefixIcon: const Icon(Icons.map_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextField(
+                      controller: zipCodeController,
+                      decoration: InputDecoration(
+                        labelText: 'ZIP Code',
+                        prefixIcon: const Icon(Icons.pin_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: () {
+                  // Create loading state outside onPressed
+                  final isLoading = RxBool(false);
+
+                  return ElevatedButton(
                     onPressed: () {
-                      // Handle delete address
-                      Get.back();
+                      // Validate inputs
+                      if (labelController.text.isEmpty ||
+                          fullAddressController.text.isEmpty ||
+                          cityController.text.isEmpty ||
+                          stateController.text.isEmpty ||
+                          zipCodeController.text.isEmpty) {
+                        Get.snackbar('Error', 'Please fill all fields');
+                        return;
+                      }
+
+                      // Create new address
+                      final newAddress = Address(
+                        id: '', // ID will be generated by repository
+                        label: labelController.text,
+                        fullAddress: fullAddressController.text,
+                        city: cityController.text,
+                        state: stateController.text,
+                        zipCode: zipCodeController.text,
+                        isDefault: isDefault.value,
+                        type: selectedType.value,
+                      );
+
+                      // Set loading to true
+                      isLoading.value = true;
+
+                      // Save address
+                      _controller.addAddress(newAddress).then((success) {
+                        // Set loading to false
+                        isLoading.value = false;
+
+                        if (success) {
+                          Get.back(); // Close bottom sheet
+                          Get.snackbar('Success', 'Address added successfully');
+                        } else {
+                          Get.snackbar('Error', 'Failed to add address');
+                        }
+                      });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      elevation: 0,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
-                      'Delete',
-                      style: AppTextStyle.withColor(
-                        AppTextStyle.buttonMedium,
-                        Colors.white,
-                      ),
+                    child: Obx(
+                      () => isLoading.value
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Save Address',
+                              style: AppTextStyle.withColor(
+                                AppTextStyle.buttonMedium,
+                                Colors.white,
+                              ),
+                            ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+                  );
+                }(),
+              ),
+            ],
+          ),
         ),
       ),
-      barrierColor: Colors.black54,
+      isScrollControlled: true,
     );
   }
 
-  Widget _buildTextField(
-    BuildContext context,
-    String label,
-    IconData icon, {
-    String? initialValue,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: Theme.of(context).primaryColor),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+  Widget _buildAddressTypeChip(BuildContext context, String label,
+      AddressType type, AddressType selectedType, VoidCallback onTap) {
+    final isSelected = type == selectedType;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color:
+              isSelected ? Theme.of(context).primaryColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? Theme.of(context).primaryColor : Colors.grey,
           ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
+        child: Text(
+          label,
+          style: AppTextStyle.withColor(
+            AppTextStyle.bodyMedium,
+            isSelected
+                ? Colors.white
+                : Theme.of(context).textTheme.bodyLarge!.color!,
           ),
         ),
       ),

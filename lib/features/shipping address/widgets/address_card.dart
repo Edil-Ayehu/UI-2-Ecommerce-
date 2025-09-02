@@ -6,12 +6,14 @@ class AddressCard extends StatelessWidget {
   final Address address;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback? onSetDefault;
 
   const AddressCard({
     super.key,
     required this.address,
     required this.onEdit,
     required this.onDelete,
+    this.onSetDefault,
   });
 
   @override
