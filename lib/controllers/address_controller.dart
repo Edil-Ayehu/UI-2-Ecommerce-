@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class AddressController extends GetxController {
   final AddressFirestoreService _addressService = AddressFirestoreService();
-  
+
   // Observable variables
   final RxList<Address> _addresses = <Address>[].obs;
   final RxBool _isLoading = false.obs;
@@ -16,6 +16,14 @@ class AddressController extends GetxController {
   bool get isLoading => _isLoading.value;
   bool get hasError => _hasError.value;
   String get errorMessage => _errorMessage.value;
+
+  // Clear addresses (used when user logs out)
+  void clearAddresses() {
+    _addresses.clear();
+    _hasError.value = false;
+    _errorMessage.value = '';
+    update(); // Notify listeners
+  }
 
   @override
   void onInit() {
@@ -44,7 +52,7 @@ class AddressController extends GetxController {
   // Get default address or first address if no default
   Address? getDefaultAddress() {
     if (_addresses.isEmpty) return null;
-    
+
     try {
       return _addresses.firstWhere(
         (address) => address.isDefault,

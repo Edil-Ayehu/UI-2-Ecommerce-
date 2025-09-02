@@ -3,6 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ecommerce_ui/services/firebase_auth_service.dart';
 import 'package:ecommerce_ui/services/firestore_service.dart';
+import 'package:ecommerce_ui/controllers/address_controller.dart';
 
 class AuthController extends GetxController {
   final _storage = GetStorage();
@@ -54,9 +55,19 @@ class AuthController extends GetxController {
       if (user != null) {
         // Load user document from Firestore
         _loadUserDocument(user.uid);
+        
+        // Reset address controller to load addresses for the new user
+        if (Get.isRegistered<AddressController>()) {
+          Get.find<AddressController>().loadAddresses();
+        }
       } else {
         // Clear user document when signed out
         _userDocument.value = null;
+        
+        // Reset address controller when user logs out
+        if (Get.isRegistered<AddressController>()) {
+          Get.find<AddressController>().clearAddresses();
+        }
       }
     });
   }

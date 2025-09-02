@@ -8,15 +8,26 @@ class AddressFirestoreService {
 
   // Collection reference
   CollectionReference<Map<String, dynamic>> get _addressesCollection {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
     return _firestore
         .collection('users')
-        .doc(_auth.currentUser?.uid)
+        .doc(userId)
         .collection('addresses');
   }
 
   // Get all addresses
   Future<List<Address>> getAddresses() async {
     try {
+      // Ensure user is authenticated
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        print('Error: User not authenticated');
+        return [];
+      }
+      
       final snapshot = await _addressesCollection.get();
       return snapshot.docs.map((doc) {
         final data = doc.data();
@@ -40,6 +51,13 @@ class AddressFirestoreService {
   // Add a new address
   Future<bool> addAddress(Address address) async {
     try {
+      // Ensure user is authenticated
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        print('Error: User not authenticated');
+        return false;
+      }
+      
       // If this is the first address or marked as default, ensure it's the only default
       if (address.isDefault) {
         await _clearOtherDefaultAddresses();
@@ -53,6 +71,7 @@ class AddressFirestoreService {
         'zipCode': address.zipCode,
         'isDefault': address.isDefault,
         'type': address.typeString,
+        'userId': userId, // Add userId to ensure data belongs to the correct user
       });
       return true;
     } catch (e) {
@@ -64,6 +83,13 @@ class AddressFirestoreService {
   // Update an address
   Future<bool> updateAddress(Address address) async {
     try {
+      // Ensure user is authenticated
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        print('Error: User not authenticated');
+        return false;
+      }
+      
       // If marked as default, ensure it's the only default
       if (address.isDefault) {
         await _clearOtherDefaultAddresses(exceptId: address.id);
@@ -77,6 +103,7 @@ class AddressFirestoreService {
         'zipCode': address.zipCode,
         'isDefault': address.isDefault,
         'type': address.typeString,
+        'userId': userId, // Ensure userId is updated
       });
       return true;
     } catch (e) {
@@ -88,6 +115,13 @@ class AddressFirestoreService {
   // Delete an address
   Future<bool> deleteAddress(String addressId) async {
     try {
+      // Ensure user is authenticated
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        print('Error: User not authenticated');
+        return false;
+      }
+      
       await _addressesCollection.doc(addressId).delete();
       return true;
     } catch (e) {
@@ -99,12 +133,20 @@ class AddressFirestoreService {
   // Set an address as default
   Future<bool> setDefaultAddress(String addressId) async {
     try {
+      // Ensure user is authenticated
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        print('Error: User not authenticated');
+        return false;
+      }
+      
       // Clear other default addresses
       await _clearOtherDefaultAddresses();
-      
+
       // Set this address as default
       await _addressesCollection.doc(addressId).update({
         'isDefault': true,
+        'userId': userId, // Ensure userId is updated
       });
       return true;
     } catch (e) {
@@ -115,10 +157,9 @@ class AddressFirestoreService {
 
   // Helper method to clear other default addresses
   Future<void> _clearOtherDefaultAddresses({String? exceptId}) async {
-    final snapshot = await _addressesCollection
-        .where('isDefault', isEqualTo: true)
-        .get();
-    
+    final snapshot =
+        await _addressesCollection.where('isDefault', isEqualTo: true).get();
+
     for (var doc in snapshot.docs) {
       if (exceptId == null || doc.id != exceptId) {
         await doc.reference.update({'isDefault': false});
